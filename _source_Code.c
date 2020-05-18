@@ -65,7 +65,7 @@ void _border(int _height, int _width){
 
 }
 
-// ------------------------------------------ PASSWORD SECTION ---------------------------------------------
+// ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
 int _registration_Menu(void){
 
     // This variable value will be return from here.
