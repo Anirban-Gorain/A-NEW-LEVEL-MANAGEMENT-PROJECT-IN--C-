@@ -6,17 +6,22 @@
 
 // Function prototype.
 void gotoxy(int ,int );
-int _registration_Menu(void);
+char _registration_Menu(void);
 void _border(int, int);
+void _red(void);
+void _green(void);
+void _reset(void);
 
 int main (void){
     // Border
-    _border(30, 121);
+    _border(28, 121);
 
     // Password
-    _registration_Menu();
+    int _return_Value;
+    _return_Value = _registration_Menu();
 
-    getch();
+    // printf("DONE");
+    // getch();
     return 0;
 }
 
@@ -58,19 +63,29 @@ void _border(int _height, int _width){
         gotoxy(_finish, 0);
         printf("_");
 
-        gotoxy(_finish, 29);
+        gotoxy(_finish, 28);
         printf("_");
 
     }
 
 }
-
+// Color functions
+void _red(void){
+    printf("\033[0;31m");
+}
+void _green(void){
+    printf("[0;32m");
+}
+void reset(void){
+    printf("[0m");
+}
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
-int _registration_Menu(void){
+char _registration_Menu(void){
 
     // This variable value will be return from here.
 
-    int _selected_Result;
+    char _selected_Result;
+    static int _maximum_Chance = 1;
 
     // Heading.
 
@@ -92,7 +107,40 @@ int _registration_Menu(void){
 
     gotoxy(32, 17);
     printf("ENTER YOUR NEEDFUL CHOICE: ");
-    scanf("%d", &_selected_Result);
+    fflush(stdin);
+    scanf("%c", &_selected_Result);
 
-    return _selected_Result;
+    // Eroor handling, Because if user entered any wrong value.
+    if((_selected_Result == 'L' || _selected_Result == 'l') || (_selected_Result == 'U' || _selected_Result == 'u') || (_selected_Result == 'S' || _selected_Result == 's')){
+
+        return _selected_Result;
+
+    }
+    else{
+
+        // If the user want to enter again option.
+
+        gotoxy(32, 19);
+        printf("WRONG CHOICE, TRY AGAIN! CLICK A KEY FOR GET A ANOTHE CHANCE.");
+        getch();
+        system("cls");
+        _border(28, 121);
+
+        // When user will exceed maximum number of chance program will be close.
+
+        if(_maximum_Chance > 4){
+            _red();
+            Beep(800, 1000);
+            gotoxy(30, 15);
+            printf("WRONG CHOICE, YOU EXCEED MAXIMUM NUMBER OF CHANCE, TRY AGAIN LATER.");
+            getch();
+            exit(1);
+
+        }
+
+        _maximum_Chance++;
+        _registration_Menu();
+
+    }
+
 }
