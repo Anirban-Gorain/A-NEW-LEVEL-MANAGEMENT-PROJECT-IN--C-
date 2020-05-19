@@ -4,6 +4,7 @@
 #include<conio.h>
 #include<windows.h>
 #include<string.h>
+#include<stdbool.h>
 
 // Function prototype.
 void gotoxy(int ,int );
@@ -12,7 +13,7 @@ void _border(int, int);
 void _red(void);
 void _green(void);
 void _reset(void);
-int _sign_Up(void);
+bool _sign_Up(void);
 
 int main (void){
     // Border
@@ -79,12 +80,12 @@ void _red(void){
 }
 void _green(void){
 
-    printf("[0;32m");
+    printf("\033[0;32m");
 
 }
-void reset(void){
+void _reset(void){
 
-    printf("[0m");
+    printf("\033[0m");
 
 }
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
@@ -155,7 +156,7 @@ char _registration_Menu(void){
 
 }
 // Sign-up time.
-int _sign_Up(void){
+bool _sign_Up(void){
 
     system("cls");
     _border(28, 121);
@@ -177,7 +178,7 @@ int _sign_Up(void){
     int _exceed_Time = 0;
     int _update_Y_Axis = 8;
 
-    while(4){
+    while(1){
 
         _exceed_Time++;
         _update_Y_Axis++;
@@ -212,6 +213,13 @@ int _sign_Up(void){
 
         }
 
+        // User name wrong message
+
+        gotoxy(18, 18);
+        _red();
+        printf("WRONG USER NAME FOLLOW THE GUIDELINE.");
+        _reset();
+
         if (_update_Y_Axis == 10)
         {
 
@@ -220,5 +228,104 @@ int _sign_Up(void){
         }
 
     }
+
+    system("cls");
+    _border(28, 121);
+    gotoxy(45, 2);
+    printf("--WELCOME TO THE SIGN-UP--");
+    gotoxy(32, 3);
+    printf("-----------------------------------------------------------");
+
+    // Taking the password.
+
+    char _password[20];
+    int _password_Lenght;
+    _exceed_Time = 0;
+    _update_Y_Axis = 8;
+
+    // Use of this below boolen array is the compare the password's pattern. INDEX 0, 1, 2 will denote the upper-case, lowercase, spcial-charter recpectivly.
+
+    bool _password_Pattern[3] = {[0 ... 2] = false};
+
+    while(1){
+
+        _exceed_Time++;
+        _update_Y_Axis++;
+
+        // If the maximum number of attempt are exceed the program will be close.
+
+        if (_exceed_Time == 4 ){
+
+            _red();
+            gotoxy(32, 22);
+            printf("YOU EXCEED THE MAXIMUM NUMBER OF TIME ATTEMPT, TRY AGAIN LATER :)");
+            getch();
+            exit(1);
+
+        }
+
+        // Instruction message bottom left corner.
+
+        gotoxy(32, 26);
+        printf("INCLUDE MINIMUM ONE SPCIAL, ONE LOWER, ONE UPPER, CHARACTERS ALSO INCLUDE NUMBERS.");
+        gotoxy(32, 27);
+        printf("PASSWORD LENGHT SHOULD BE GRATER THEN 8 AND LESS THEN 20.");
+
+        gotoxy(32, _update_Y_Axis);
+        printf("ENTER YOUR PASSWORD: ");
+        fflush(stdin);
+        gets(_password);
+
+        _password_Lenght = strlen(_password);
+
+        // If the PASSWORD satisfied all the criteria then this loop will be break.
+
+        if( _password_Lenght > 5 && _password_Lenght < 20 ){
+
+                // INDEX 0, 1, 2 will denote the upper-case, lowercase, special-charter respectively.
+                
+                for (int _index_Of_Password = 0; _index_Of_Password < _password_Lenght; _index_Of_Password++)
+                {
+                    if((_password_Pattern[1] != true) && (_password[_index_Of_Password] >= 97 && _password[_index_Of_Password] <= 122)){
+
+                        _password_Pattern[1] = true;
+                    }
+                    if((_password_Pattern[0] != true) && (_password[_index_Of_Password] >= 65 && _password[_index_Of_Password] <= 90)){
+
+                        _password_Pattern[0] = true;
+
+                    }
+                    if((_password_Pattern[2] != true) && ((_password[_index_Of_Password] >= 33 && _password[_index_Of_Password] <= 47) || (_password[_index_Of_Password] >= 58 && _password[_index_Of_Password] <= 64) || (_password[_index_Of_Password] >= 91 && _password[_index_Of_Password] <= 96) || (_password[_index_Of_Password] >= 123 && _password[_index_Of_Password] <= 126))){
+                        
+                        _password_Pattern[2] = true;
+    
+                    }
+
+                }
+
+        }
+
+        // If the both the blocks are true then the loop will be break.
+
+        if (_password_Pattern[0] == true && _password_Pattern[1] == true && _password_Pattern[2] == true)
+        {
+
+            printf("WORKING");
+            getch();
+            return true;
+            
+        }
+                
+
+        // Password wrong message.
+
+        gotoxy(32, 18);
+        _red();
+        printf("WRONG PASSWORD FOLLOW THE GUIDELINE.");
+        _reset();
+
+    }
+
+    return false;
 
 }
