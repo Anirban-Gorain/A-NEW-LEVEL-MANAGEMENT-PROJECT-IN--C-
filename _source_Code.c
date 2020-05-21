@@ -130,6 +130,24 @@ void _encryption_And_Decryption(char *_data_pointer){
 
 
 }
+
+// -------------------------------------------- DEFINE DAYATYPE -----------------------------------------------
+
+struct REGISTRATION {
+
+    char _user_Name[20];
+    char _password[20];
+    char _answer_City[20];
+    char _answer_Pet[20];
+    char _answer_Vehicle[20];
+
+};
+typedef struct REGISTRATION _REGISTRATION;
+
+// -------------------------------------------- GLOBAL VARIABLES ----------------------------------------------
+
+_REGISTRATION _sign_up;
+
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
 // Registration menu.
 char _registration_Menu(void){
@@ -201,7 +219,9 @@ char _registration_Menu(void){
     }
 
 }
+
 // Sign-up time.
+
 bool _sign_Up(void){
 
     system("cls");
@@ -219,7 +239,7 @@ bool _sign_Up(void){
 
     // Taking the user name.
 
-    char _user_Name[20];
+    
     int _user_Name_Lenght;
     int _exceed_Time = 0;
     int _update_Y_Axis = 8;
@@ -247,9 +267,9 @@ bool _sign_Up(void){
         _update_Y_Axis++;
         gotoxy(18, _update_Y_Axis);
         fflush(stdin);
-        gets(_user_Name);
+        gets(_sign_up._user_Name);
 
-        _user_Name_Lenght = strlen(_user_Name);
+        _user_Name_Lenght = strlen(_sign_up._user_Name);
 
         // If the user name satisfied all the criteria then  this loop will be break.
 
@@ -284,7 +304,7 @@ bool _sign_Up(void){
 
     // Taking the password.
 
-    char _password[20];
+    _sign_up._password[20];
     int _password_Lenght;
     _exceed_Time = 0;
     _update_Y_Axis = 8;
@@ -312,17 +332,21 @@ bool _sign_Up(void){
 
         // Instruction message bottom left corner.
 
+        _green();
+
         gotoxy(32, 26);
         printf("INCLUDE MINIMUM ONE SPCIAL, ONE LOWER, ONE UPPER, CHARACTERS ALSO INCLUDE NUMBERS.");
         gotoxy(32, 27);
         printf("PASSWORD LENGHT SHOULD BE GRATER THEN 8 AND LESS THEN 20.");
 
+        _reset();
+
         gotoxy(32, _update_Y_Axis);
         printf("ENTER YOUR PASSWORD: ");
         fflush(stdin);
-        gets(_password);
+        gets(_sign_up._password);
 
-        _password_Lenght = strlen(_password);
+        _password_Lenght = strlen(_sign_up._password);
 
         // If the PASSWORD satisfied all the criteria then this loop will be break.
 
@@ -332,16 +356,16 @@ bool _sign_Up(void){
 
                 for (int _index_Of_Password = 0; _index_Of_Password < _password_Lenght; _index_Of_Password++)
                 {
-                    if((_password_Pattern[1] != true) && (_password[_index_Of_Password] >= 97 && _password[_index_Of_Password] <= 122)){
+                    if((_password_Pattern[1] != true) && (_sign_up._password[_index_Of_Password] >= 97 && _sign_up._password[_index_Of_Password] <= 122)){
 
                         _password_Pattern[1] = true;
                     }
-                    if((_password_Pattern[0] != true) && (_password[_index_Of_Password] >= 65 && _password[_index_Of_Password] <= 90)){
+                    if((_password_Pattern[0] != true) && (_sign_up._password[_index_Of_Password] >= 65 && _sign_up._password[_index_Of_Password] <= 90)){
 
                         _password_Pattern[0] = true;
 
                     }
-                    if((_password_Pattern[2] != true) && ((_password[_index_Of_Password] >= 33 && _password[_index_Of_Password] <= 47) || (_password[_index_Of_Password] >= 58 && _password[_index_Of_Password] <= 64) || (_password[_index_Of_Password] >= 91 && _password[_index_Of_Password] <= 96) || (_password[_index_Of_Password] >= 123 && _password[_index_Of_Password] <= 126))){
+                    if((_password_Pattern[2] != true) && ((_sign_up._password[_index_Of_Password] >= 33 && _sign_up._password[_index_Of_Password] <= 47) || (_sign_up._password[_index_Of_Password] >= 58 && _sign_up._password[_index_Of_Password] <= 64) || (_sign_up._password[_index_Of_Password] >= 91 && _sign_up._password[_index_Of_Password] <= 96) || (_sign_up._password[_index_Of_Password] >= 123 && _sign_up._password[_index_Of_Password] <= 126))){
 
                         _password_Pattern[2] = true;
 
@@ -356,8 +380,25 @@ bool _sign_Up(void){
         if (_password_Pattern[0] == true && _password_Pattern[1] == true && _password_Pattern[2] == true)
         {
 
-            _encryption_And_Decryption(_user_Name);
-            _encryption_And_Decryption(_password);
+            _encryption_And_Decryption(_sign_up._user_Name);
+            _encryption_And_Decryption(_sign_up._password);
+
+            // The control came here mean user-name, password done also security questions asking will be start.
+
+            system("cls");
+            _border(28, 121);
+
+            gotoxy(45, 2);
+            printf("--WELCOME TO THE SIGN-UP--");
+            gotoxy(32, 3);
+            printf("-----------------------------------------------------------");
+
+            _security_Questions();
+
+            _encryption_And_Decryption(_sign_up._answer_City);
+            _encryption_And_Decryption(_sign_up._answer_Pet);
+            _encryption_And_Decryption(_sign_up._answer_Vehicle);
+
             return true;
 
         }
@@ -373,5 +414,39 @@ bool _sign_Up(void){
     }
 
     return false;
+
+}
+
+// Security questions
+
+int _security_Questions(){
+
+    // Recommendation
+
+    _green();
+    gotoxy(32, 26);
+    printf("YOU SHOULD TO GIVE TRICKY ANSWERS FOR BETTER SECURITY OF YOUR DATA.");
+
+    // resting text color.
+
+    _reset();
+
+    // First question.
+
+    gotoxy(32, 8);
+    printf("WHAT IS YOUR CITY NAME, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
+    gets(_sign_up._answer_City);
+
+    // Second question.
+
+    gotoxy(32, 10);
+    printf("MAY YOU HAVE ANY PET, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
+    gets(_sign_up._answer_Pet);
+
+    // Third question
+
+    gotoxy(32, 12);
+    printf("MAY YOU HAVE ANY VEHICLE, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
+    gets(_sign_up._answer_Vehicle);
 
 }
