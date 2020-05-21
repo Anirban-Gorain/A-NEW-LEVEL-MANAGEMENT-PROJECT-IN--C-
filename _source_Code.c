@@ -14,16 +14,35 @@ void _red(void);
 void _green(void);
 void _reset(void);
 bool _sign_Up(void);
+void _encryption_And_Decryption(char *);
 
 int main (void){
-    // Border
-    // _border(28, 121);
 
-    // Password
-    // int _return_Value;
-    // _return_Value = _registration_Menu();
-    _sign_Up();
-    // printf("DONE");
+    // Registration
+
+    char _return_Value;
+    _return_Value = _registration_Menu();
+
+    // Comparing user choice in registration section.
+
+    if(_return_Value == 'L' || _return_Value == 'l'){
+
+        // This section for LOG-IN.
+
+    }else if(_return_Value == 'U' || _return_Value == 'u'){
+
+        // This section for SIGNED_UP-DATA-UPDATE.
+
+    }else{
+
+        // This section for SIGN-UP
+
+        _sign_Up();
+
+    }
+
+
+
     // getch();
     return 0;
 }
@@ -73,24 +92,51 @@ void _border(int _height, int _width){
 
 }
 // Color functions
+
 void _red(void){
 
     printf("\033[0;31m");
 
 }
+
 void _green(void){
 
     printf("\033[0;32m");
 
 }
+
 void _reset(void){
 
     printf("\033[0m");
 
 }
+
+// Encryption decryption function
+
+void _encryption_And_Decryption(char *_data_pointer){
+
+    // The below array is the encryption decryption key.
+
+    char _key[] = {'p', '3','2', '7','O', '9','c', 'X','s', 'q','w', '~','*', '2', 'I'};
+
+    for (int _data_Index = 0; *(_data_pointer + _data_Index) != 0; _data_Index++)
+    {
+        for (int _key_Index = 0; *(_key + _key_Index) != 0; _key_Index++)
+        {
+            *(_data_pointer + _data_Index) ^= *(_key + _key_Index);
+        }
+
+    }
+
+
+}
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
 // Registration menu.
 char _registration_Menu(void){
+
+    // Border
+
+    _border(28, 121);
 
     // This variable value will be return from here.
 
@@ -283,7 +329,7 @@ bool _sign_Up(void){
         if( _password_Lenght > 5 && _password_Lenght < 20 ){
 
                 // INDEX 0, 1, 2 will denote the upper-case, lowercase, special-charter respectively.
-                
+
                 for (int _index_Of_Password = 0; _index_Of_Password < _password_Lenght; _index_Of_Password++)
                 {
                     if((_password_Pattern[1] != true) && (_password[_index_Of_Password] >= 97 && _password[_index_Of_Password] <= 122)){
@@ -296,9 +342,9 @@ bool _sign_Up(void){
 
                     }
                     if((_password_Pattern[2] != true) && ((_password[_index_Of_Password] >= 33 && _password[_index_Of_Password] <= 47) || (_password[_index_Of_Password] >= 58 && _password[_index_Of_Password] <= 64) || (_password[_index_Of_Password] >= 91 && _password[_index_Of_Password] <= 96) || (_password[_index_Of_Password] >= 123 && _password[_index_Of_Password] <= 126))){
-                        
+
                         _password_Pattern[2] = true;
-    
+
                     }
 
                 }
@@ -310,12 +356,12 @@ bool _sign_Up(void){
         if (_password_Pattern[0] == true && _password_Pattern[1] == true && _password_Pattern[2] == true)
         {
 
-            printf("WORKING");
-            getch();
+            _encryption_And_Decryption(_user_Name);
+            _encryption_And_Decryption(_password);
             return true;
-            
+
         }
-                
+
 
         // Password wrong message.
 
