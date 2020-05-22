@@ -7,7 +7,7 @@
 #include<stdbool.h>
 
 // Function prototype.
-void gotoxy(int ,int );
+void gotoxy(int ,int);
 int _registration_Menu(void);
 void _border(int, int);
 void _red(void);
@@ -224,7 +224,8 @@ int _registration_Menu(void){
 // Sign-up time.
 
 bool _sign_Up(void){
-    // First check may stored any previous Signed-up data and this section of code for this
+
+    // First check may stored any previous Signed-up data and this section of code for this.
 
     FILE *_file_Pointer = fopen("PASSWORD/DATA.txt", "a+");
 
@@ -245,7 +246,7 @@ bool _sign_Up(void){
         gotoxy(32, 3);
         printf("-----------------------------------------------------------");
 
-        // Danger message 
+        // Danger message that, When user came here wich mean all the Signed-up data will be delete as well as all the stored records.
 
             _red();
             gotoxy(32, 19);
@@ -257,7 +258,7 @@ bool _sign_Up(void){
 
         // Control came here mean already a signed-up data exists.
 
-        // First fetch all the sign up data from data-base or file
+        // First fetch all the Siged-up data from data-base or file.
 
         _REGISTRATION _store_Fetched_Signed_Up_Data;
 
@@ -304,9 +305,6 @@ bool _sign_Up(void){
             // Control came here mean the the taken data and Signed-up time data both are equal.
 
             remove("PASSWORD/DATA.txt");
-
-            printf("MATCHed");
-            getch();
 
             system("cls");
             _border(28, 121);
