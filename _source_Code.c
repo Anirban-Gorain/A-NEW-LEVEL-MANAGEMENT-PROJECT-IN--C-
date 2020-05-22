@@ -8,40 +8,19 @@
 
 // Function prototype.
 void gotoxy(int ,int );
-char _registration_Menu(void);
+int _registration_Menu(void);
 void _border(int, int);
 void _red(void);
 void _green(void);
 void _reset(void);
 bool _sign_Up(void);
 void _encryption_And_Decryption(char *);
-void _security_Questions(void);
+void _security_Questions(bool);
 
 int main (void){
 
-    // Registration
-
-    char _return_Value;
-    _return_Value = _registration_Menu();
-
-    // Comparing user choice in registration section.
-
-    if(_return_Value == 'L' || _return_Value == 'l'){
-
-        // This section for LOG-IN.
-
-    }else if(_return_Value == 'U' || _return_Value == 'u'){
-
-        // This section for SIGNED_UP-DATA-UPDATE.
-
-    }else{
-
-        // This section for SIGN-UP
-
-        _sign_Up();
-
-    }
-
+    
+    _registration_Menu();
 
 
     // getch();
@@ -151,7 +130,7 @@ _REGISTRATION _sign_up;
 
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
 // Registration menu.
-char _registration_Menu(void){
+int _registration_Menu(void){
 
     // Border
 
@@ -188,7 +167,26 @@ char _registration_Menu(void){
     // Eroor handling, Because if user entered any wrong value.
     if((_selected_Result == 'L' || _selected_Result == 'l') || (_selected_Result == 'U' || _selected_Result == 'u') || (_selected_Result == 'S' || _selected_Result == 's')){
 
-        return _selected_Result;
+        // Registration
+
+
+        // Comparing user choice in registration section.
+
+        if(_selected_Result == 'L' || _selected_Result == 'l'){
+
+        // This section for LOG-IN.
+
+        }else if(_selected_Result == 'U' || _selected_Result == 'u'){
+
+        // This section for SIGNED_UP-DATA-UPDATE.
+
+        }else{
+
+        // This section for SIGN-UP.
+
+        _sign_Up();
+
+        }
 
     }
     else{
@@ -219,28 +217,148 @@ char _registration_Menu(void){
 
     }
 
+
+
 }
 
 // Sign-up time.
 
 bool _sign_Up(void){
+    // First check may stored any previous Signed-up data and this section of code for this
+
+    FILE *_file_Pointer = fopen("PASSWORD/DATA.txt", "a+");
+
+    // Checking file empty or not.
+
+    fseek(_file_Pointer, 0, SEEK_END);
+
+    int _is_Empty = ftell(_file_Pointer);
+
+    fclose(_file_Pointer);
+
+    if(_is_Empty != 0){
+
+        system("cls");
+        _border(28, 121);
+        gotoxy(45, 2);
+        printf("--WELCOME TO THE VERIFY YOURSELF--");
+        gotoxy(32, 3);
+        printf("-----------------------------------------------------------");
+
+        // Danger message 
+
+            _red();
+            gotoxy(32, 19);
+            printf("RISK! YOUR DATA WILL BE DELETE.");
+
+            gotoxy(32, 20);
+            printf("IF YOU WANT TO DELETE YOU ACCOUNT WITH ALL THE RECORD THEN THIS SECTION FOR YOU.");
+            _reset();
+
+        // Control came here mean already a signed-up data exists.
+
+        // First fetch all the sign up data from data-base or file
+
+        _REGISTRATION _store_Fetched_Signed_Up_Data;
+
+        FILE * _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._user_Name);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._user_Name);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._password);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._password);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_City);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_City);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Pet);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Pet);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Vehicle);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Vehicle);
+
+        fclose(_file_Pointer);
+
+        gotoxy(32, 4);
+        printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        fflush(stdin);
+        gets(_sign_up._user_Name);
+
+        gotoxy(32, 6);
+        printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        gets(_sign_up._password);
+
+        _security_Questions(false);
+
+        // Strcmp return 0 if both the strings ar equal.
+
+        if(
+
+            (((!strcmp(_store_Fetched_Signed_Up_Data._user_Name, _sign_up._user_Name) && !strcmp(_store_Fetched_Signed_Up_Data._password, _sign_up._password))
+            && !strcmp(_store_Fetched_Signed_Up_Data._answer_City, _sign_up._answer_City)) && !strcmp(_store_Fetched_Signed_Up_Data._answer_Pet, _sign_up._answer_Pet))
+            && !strcmp(_store_Fetched_Signed_Up_Data._answer_Vehicle, _sign_up._answer_Vehicle)
+
+        ){
+
+            // Control came here mean the the taken data and Signed-up time data both are equal.
+
+            remove("PASSWORD/DATA.txt");
+
+            printf("MATCHed");
+            getch();
+
+            system("cls");
+            _border(28, 121);
+            gotoxy(45, 2);
+            printf("--WELCOME TO THE SIGN-UP--");
+            gotoxy(32, 3);
+            printf("-----------------------------------------------------------");
+
+
+        }else{
+
+            // When the control came here wich mean anywhear the Signed-up data and at the cureent time taken data these are not equal.
+
+            _red();
+            gotoxy(32, 22);
+            printf("YOUR ENTERD DATA ARE NOTE MATCHED WITH THE PREVIOUS TIME SIGNED UP DATA.");
+
+            gotoxy(32, 23);
+            printf("PRESS E FOR EXIT AND P FOR THE PREVIOUS MENUE.");
+
+            char _user_Choice = getch();
+
+            if(_user_Choice == 'e' || _user_Choice == 'E'){
+
+                exit(1);
+
+            }else{
+
+
+                system("cls");
+                _reset();
+                _registration_Menu();
+
+            }
+
+        }
+
+    }
+
+
+    // If don't having any Signed-up data the this below section of code for this.
 
     system("cls");
     _border(28, 121);
     gotoxy(45, 2);
-    printf("--WELCOME TO THE SIGN-UP--");
+    printf("--WELCOME TO THE VERIFY YOUR--");
     gotoxy(32, 3);
     printf("-----------------------------------------------------------");
-    // First check may stored any previous Signed-up data and this section of code for this
-
-    // ------------- --------  ----------- ---------------- -------------
-
-
-    // If don't having any Signed-up data the this section of code for this.
 
     // Taking the user name.
 
-    
+
     int _user_Name_Lenght;
     int _exceed_Time = 0;
     int _update_Y_Axis = 8;
@@ -394,7 +512,7 @@ bool _sign_Up(void){
             gotoxy(32, 3);
             printf("-----------------------------------------------------------");
 
-            _security_Questions();
+            _security_Questions(true);
 
             _encryption_And_Decryption(_sign_up._answer_City);
             _encryption_And_Decryption(_sign_up._answer_Pet);
@@ -424,13 +542,19 @@ bool _sign_Up(void){
 
 // Security questions
 
-void _security_Questions(void){
+void _security_Questions(bool _permission){
 
     // Recommendation
 
-    _green();
-    gotoxy(32, 26);
-    printf("YOU SHOULD TO GIVE TRICKY ANSWERS FOR BETTER SECURITY OF YOUR DATA.");
+    if (_permission == true)
+    {
+
+        _green();
+        gotoxy(32, 26);
+        printf("YOU SHOULD TO GIVE TRICKY ANSWERS FOR BETTER SECURITY OF YOUR DATA.");
+
+    }
+    
 
     // resting text color.
 
