@@ -15,6 +15,7 @@ void _green(void);
 void _reset(void);
 bool _sign_Up(void);
 void _encryption_And_Decryption(char *);
+void _security_Questions(void);
 
 int main (void){
 
@@ -399,6 +400,10 @@ bool _sign_Up(void){
             _encryption_And_Decryption(_sign_up._answer_Pet);
             _encryption_And_Decryption(_sign_up._answer_Vehicle);
 
+            // After sucessfully done to take User-name, Password And three questions's answer store these data on the file.
+
+            _putting_Sign_Up_Data_On_The_Data_Base(false);
+
             return true;
 
         }
@@ -419,7 +424,7 @@ bool _sign_Up(void){
 
 // Security questions
 
-int _security_Questions(){
+void _security_Questions(void){
 
     // Recommendation
 
@@ -448,5 +453,42 @@ int _security_Questions(){
     gotoxy(32, 12);
     printf("MAY YOU HAVE ANY VEHICLE, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
     gets(_sign_up._answer_Vehicle);
+
+}
+
+// Putting Sign-up data.
+
+void _putting_Sign_Up_Data_On_The_Data_Base(bool _permission_To_Clean_File){
+
+
+    // If need to clean the content the file
+
+    if(_permission_To_Clean_File == true){
+
+        remove("PASSWORD/DATA.txt");
+
+    }
+
+    FILE *_file_Pointer = fopen("PASSWORD/DATA.txt", "a+");
+
+    // Putting User-name.
+
+    fprintf(_file_Pointer, "%s\n", _sign_up._user_Name);
+
+    // Putting Password.
+
+    fprintf(_file_Pointer, "%s\n", _sign_up._password);
+
+    // Putting First question answer.
+
+    fprintf(_file_Pointer, "%s\n", _sign_up._answer_City);
+
+    // Putting Second question answer.
+
+    fprintf(_file_Pointer, "%s\n", _sign_up._answer_Pet);
+
+    // Putting Third question answer.
+
+    fprintf(_file_Pointer, "%s", _sign_up._answer_Vehicle);
 
 }
