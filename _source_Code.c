@@ -132,6 +132,8 @@ _REGISTRATION _sign_up;
 // Registration menu.
 int _registration_Menu(void){
 
+    system("cls");
+
     // Border
 
     _border(28, 121);
@@ -142,7 +144,6 @@ int _registration_Menu(void){
     static int _maximum_Chance = 1;
 
     // Heading.
-
     gotoxy(45, 2);
     printf("--WELCOME TO THE REGISTRATION--");
     gotoxy(32, 3);
@@ -246,102 +247,143 @@ bool _sign_Up(void){
         gotoxy(32, 3);
         printf("-----------------------------------------------------------");
 
-        // Danger message that, When user came here wich mean all the Signed-up data will be delete as well as all the stored records.
+        // Control came here mean already Signed-data is exists, Here will verify the may user want to delete this existing account and this account's data.
+        _red();
+        gotoxy(3, 4);
+        printf("ALREADY SIGNED-UP, IF YOU WANT REALLY TO DELETE YOUR EXISTING ACCOUNT WITH ALL THE RECORDS WHICH ARE PRESENT AT THE");
+        gotoxy(3, 5);
+        printf("CUREENT TIME IN THE DATABASE TO DELETE PRESS \'Y\', GO TO THE BACK MENUE PRESS \'N\':");
+        _reset();
 
-            _red();
-            gotoxy(32, 19);
-            printf("RISK! YOUR DATA WILL BE DELETE.");
-
-            gotoxy(32, 20);
-            printf("IF YOU WANT TO DELETE YOU ACCOUNT WITH ALL THE RECORD THEN THIS SECTION FOR YOU.");
-            _reset();
-
-        // Control came here mean already a signed-up data exists.
-
-        // First fetch all the Siged-up data from data-base or file.
-
-        _REGISTRATION _store_Fetched_Signed_Up_Data;
-
-        FILE * _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
-
-        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._user_Name);
-        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._user_Name);
-
-        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._password);
-        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._password);
-
-        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_City);
-        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_City);
-
-        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Pet);
-        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Pet);
-
-        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Vehicle);
-        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Vehicle);
-
-        fclose(_file_Pointer);
-
-        gotoxy(32, 4);
-        printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
-        fflush(stdin);
-        gets(_sign_up._user_Name);
-
-        gotoxy(32, 6);
-        printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
-        gets(_sign_up._password);
-
-        _security_Questions(false);
-
-        // Strcmp return 0 if both the strings ar equal.
-
-        if(
-
-            (((!strcmp(_store_Fetched_Signed_Up_Data._user_Name, _sign_up._user_Name) && !strcmp(_store_Fetched_Signed_Up_Data._password, _sign_up._password))
-            && !strcmp(_store_Fetched_Signed_Up_Data._answer_City, _sign_up._answer_City)) && !strcmp(_store_Fetched_Signed_Up_Data._answer_Pet, _sign_up._answer_Pet))
-            && !strcmp(_store_Fetched_Signed_Up_Data._answer_Vehicle, _sign_up._answer_Vehicle)
-
-        ){
-
-            // Control came here mean the the taken data and Signed-up time data both are equal.
-
-            remove("PASSWORD/DATA.txt");
+        char _user_Choice = getch();
+        
+        if (_user_Choice == 'Y' || _user_Choice == 'y')
+        {
 
             system("cls");
             _border(28, 121);
             gotoxy(45, 2);
-            printf("--WELCOME TO THE SIGN-UP--");
+            printf("--WELCOME TO THE VERIFY YOURSELF--");
             gotoxy(32, 3);
             printf("-----------------------------------------------------------");
 
+            // First fetch all the Siged-up data from data-base or file.
 
-        }else{
+            _REGISTRATION _store_Fetched_Signed_Up_Data;
 
-            // When the control came here wich mean anywhear the Signed-up data and at the cureent time taken data these are not equal.
+            FILE * _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
 
-            _red();
-            gotoxy(32, 22);
-            printf("YOUR ENTERD DATA ARE NOTE MATCHED WITH THE PREVIOUS TIME SIGNED UP DATA.");
+            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._user_Name);
+            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._user_Name);
 
-            gotoxy(32, 23);
-            printf("PRESS E FOR EXIT AND P FOR THE PREVIOUS MENUE.");
+            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._password);
+            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._password);
 
-            char _user_Choice = getch();
+            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_City);
+            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_City);
 
-            if(_user_Choice == 'e' || _user_Choice == 'E'){
+            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Pet);
+            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Pet);
 
-                exit(1);
+            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Vehicle);
+            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Vehicle);
+
+            fclose(_file_Pointer);
+
+            gotoxy(32, 4);
+            printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+            fflush(stdin);
+            gets(_sign_up._user_Name);
+
+            gotoxy(32, 6);
+            printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+            gets(_sign_up._password);
+
+            _security_Questions(false);
+
+            // Strcmp return 0 if both the strings ar equal.
+
+            if(
+
+                (((!strcmp(_store_Fetched_Signed_Up_Data._user_Name, _sign_up._user_Name) && !strcmp(_store_Fetched_Signed_Up_Data._password, _sign_up._password))
+                && !strcmp(_store_Fetched_Signed_Up_Data._answer_City, _sign_up._answer_City)) && !strcmp(_store_Fetched_Signed_Up_Data._answer_Pet, _sign_up._answer_Pet))
+                && !strcmp(_store_Fetched_Signed_Up_Data._answer_Vehicle, _sign_up._answer_Vehicle)
+
+            ){
+
+                // Control came here mean the taken data and Signed-up time data both are equal and user give permission to delete all teh data.
+
+                remove("PASSWORD/DATA.txt");
+                 
+
+                system("cls");
+                _border(28, 121);
+                gotoxy(45, 2);
+                printf("--ALL THE RECORD ARE DELETED--");
+                gotoxy(32, 3);
+                printf("-----------------------------------------------------------"); 
+
+                gotoxy(32, 12);
+                _green();
+                printf("ALL THE RECORD AND YOUR ACCOUNT SUCESSFULLY DELETED.");
+                gotoxy(32, 13);
+                _reset();
+                printf("PRESS \'E\' FOR THE \'EXIT\' OR \'S\' FOR SIGN UP.");
+
+                _user_Choice = getch();
+
+                if (_user_Choice == 'e' || _user_Choice == 'E')
+                {
+
+                    exit(1);
+
+                }else
+                {
+                    _registration_Menu();
+                }
+                
+                
+
 
             }else{
 
+                // When the control came here wich mean anywhear the Signed-up data and at the cureent time taken data these are not equal.
 
-                system("cls");
-                _reset();
-                _registration_Menu();
+                _red();
+                gotoxy(32, 22);
+                printf("YOUR ENTERD DATA ARE NOTE MATCHED WITH THE PREVIOUS TIME SIGNED UP DATA.");
+
+                gotoxy(32, 23);
+                printf("PRESS E FOR EXIT AND P FOR THE PREVIOUS MENUE.");
+
+                char _user_Choice = getch();
+
+                if(_user_Choice == 'e' || _user_Choice == 'E'){
+
+                    exit(1);
+
+                }else{
+
+                    _reset();
+                    _registration_Menu();
+
+                }
 
             }
 
-        }
+            
+        }else
+        {
 
+            // If user selected that user don't need to delete his/her accound the will be redirect to the registration menu.
+
+            
+            _reset();
+
+            _registration_Menu();
+
+        }
+        
     }
 
 
@@ -573,6 +615,7 @@ void _security_Questions(bool _permission){
     // Third question
 
     gotoxy(32, 12);
+    fflush(stdin);
     printf("MAY YOU HAVE ANY VEHICLE, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
     gets(_sign_up._answer_Vehicle);
 
