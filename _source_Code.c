@@ -97,7 +97,7 @@ void _encryption_And_Decryption(char *_data_pointer){
 
     // The below array is the encryption decryption key.
 
-    char _key[] = {'p', '3','2', '7','O', '9','c', 'X','s', 'q','w', '~','*', '2', 'I'};
+    char _key[] = {'+', '-','*', '/'};
 
     for (int _data_Index = 0; *(_data_pointer + _data_Index) != 0; _data_Index++)
     {
@@ -350,7 +350,7 @@ bool _sign_Up(void){
     system("cls");
     _border(28, 121);
     gotoxy(45, 2);
-    printf("--WELCOME TO THE VERIFY YOUR--");
+    printf("--WELCOME TO THE SIGN-UP--");
     gotoxy(32, 3);
     printf("-----------------------------------------------------------");
 
