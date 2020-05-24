@@ -7,8 +7,9 @@
 #include<stdbool.h>
 
 // Function prototype.
+
 void gotoxy(int ,int);
-int _registration_Menu(void);
+bool _registration_Menu(void);
 void _border(int, int);
 void _red(void);
 void _green(void);
@@ -16,12 +17,18 @@ void _reset(void);
 bool _sign_Up(void);
 void _encryption_And_Decryption(char *);
 void _security_Questions(bool);
-int _log_In(void);
+bool _log_In(void);
 
 int main (void){
 
     
-    _registration_Menu();
+    if (_registration_Menu() == true)
+    {
+        
+            printf("DONE");
+
+    }
+    
 
 
     // getch();
@@ -132,7 +139,7 @@ _REGISTRATION _sign_up;
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
 // Registration menu.
 
-int _registration_Menu(void){
+bool _registration_Menu(void){
 
     system("cls");
 
@@ -180,14 +187,20 @@ int _registration_Menu(void){
 
             // Heading.
 
-            fflush(stdin);
             system("cls");
             _border(28, 121);
             gotoxy(45, 2);
-            printf("--WELCOME TO THE REGISTRATION--");
+            printf("--WELCOME TO THE LOG-IN--");
             gotoxy(32, 3);
-            printf("-----------------------------------------------------------");    
-            _log_In();
+            printf("-----------------------------------------------------------");   
+
+            if(_log_In() == true){
+
+                // If login sucessfully.
+                
+                return true;
+
+            }
 
         }else if(_selected_Result == 'U' || _selected_Result == 'u'){
 
@@ -197,7 +210,13 @@ int _registration_Menu(void){
 
         // This section for SIGN-UP.
 
-            _sign_Up();
+            if(_sign_Up() == true){
+
+                // If login sucessfully.
+                
+                return true;
+
+            }
 
         }
 
@@ -351,7 +370,9 @@ bool _sign_Up(void){
 
                 }else
                 {
+
                     _registration_Menu();
+
                 }
                 
                 
@@ -572,6 +593,10 @@ bool _sign_Up(void){
 
             _putting_Sign_Up_Data_On_The_Data_Base(false);
 
+            gotoxy(32, 14);
+            printf("SIGN-UP DONE, YOU WILL REDIRECT YO THE MENUE, PRESS ANY KEY TO CONTINUE.");
+            getch();
+
             return true;
 
         }
@@ -579,10 +604,10 @@ bool _sign_Up(void){
 
         // Password wrong message.
 
-        gotoxy(32, 18);
-        _red();
-        printf("WRONG PASSWORD FOLLOW THE GUIDELINE.");
-        _reset();
+            gotoxy(32, 18);
+            _red();
+            printf("WRONG PASSWORD FOLLOW THE GUIDELINE.");
+            _reset();
 
         }
 
@@ -672,33 +697,108 @@ void _putting_Sign_Up_Data_On_The_Data_Base(bool _permission_To_Clean_File){
 
 // Login-in or Sign-up time.
 
-int _log_In(void){
-
-    // First fetching User-name and Password from file.
+bool _log_In(void){
 
     FILE * _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
 
-    char _user_Name[20];
-    char _password[20];
+    char _fetch_User_Name[20];
+    char _fetch_Password[20];
+    char _from_User_Username[20];
+    char _from_User_Password[20];
 
     if(_file_Pointer == NULL){
 
         _red();
         gotoxy(32, 8);
-        printf("FILE NOT FOUND. YOUR DATA HASS BEEN LOSSED");
+        printf("NO SIGN-UP FOUND.");
+        
+        char _user_Choice;
+
+        gotoxy(32, 11);
+        _red();
+        printf("PRESS R FOR REGISTRATION MENUE, E FOR EXIT.");
+        _reset();
+        fflush(stdin);
+        _user_Choice = getch();
+
+        if(_user_Choice == 'R' || _user_Choice == 'r'){
+
+                _registration_Menu();
+
+        }else{
+
+                exit(1);
+
+        }
+
 
 
     }else{
-        fscanf(_file_Pointer, "%s", &_user_Name);
-        _encryption_And_Decryption(&_user_Name);
 
-        fscanf(_file_Pointer, "%s", &_password);
-        _encryption_And_Decryption(&_password);
+        // First fetching User-name and Password from file.
 
-        printf("%s\n", _user_Name);
-        printf("%s\n", _password);
+        fscanf(_file_Pointer, "%s", &_fetch_User_Name);
+        _encryption_And_Decryption(&_fetch_User_Name);
+
+        fscanf(_file_Pointer, "%s", &_fetch_Password);
+        _encryption_And_Decryption(&_fetch_Password);
+
+        // Second taking User-name and Password from user.
+
+        gotoxy(32, 8);
+        printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        fflush(stdin);
+        gets(_from_User_Username);
+
+        gotoxy(32, 10);
+        printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        gets(_from_User_Password);
+
+        if ((!strcmp(_fetch_User_Name, _from_User_Username) && !strcmp(_fetch_Password, _from_User_Password)))
+        {
+            // Control came here mean fetched user name and password are matched with taken from user, user name and password.
+
+            return true;
+
+        }else
+        {
+
+            char _user_Choice;
+
+            gotoxy(4, 27);
+            _red();
+            printf("YOUR GIVEN USER-NAME AND PASSWORD ARE NOT MTCHED, PRESS T FOR TRAY AGAIN, R FOR REGISTRATION MENUE, E FOR EXIT.");
+            _reset();
+            fflush(stdin);
+            _user_Choice = getch();
+
+            if(_user_Choice == 'T' || _user_Choice == 't'){
+
+                system("cls");
+                _border(28, 121);
+                gotoxy(45, 2);
+                printf("--WELCOME TO THE LOG-IN--");
+                gotoxy(32, 3);
+                printf("-----------------------------------------------------------");
+                _log_In();
+
+            }else if(_user_Choice == 'R' || _user_Choice == 'r'){
+
+                _registration_Menu();
+
+            }else{
+
+                exit(1);
+
+            }
+
+
+    
+        }
+        
+        
+
     }
 
 
-    return 0;
 }
