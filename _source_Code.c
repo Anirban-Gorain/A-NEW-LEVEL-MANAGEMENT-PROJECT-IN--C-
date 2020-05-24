@@ -18,6 +18,8 @@ bool _sign_Up(void);
 void _encryption_And_Decryption(char *);
 void _security_Questions(bool);
 bool _log_In(void);
+bool _verify_User(void);
+bool _update_Signed_Up_Information(void);
 
 int main (void){
 
@@ -34,6 +36,24 @@ int main (void){
     // getch();
     return 0;
 }
+
+// -------------------------------------------- DEFINE DAYATYPE -----------------------------------------------
+
+struct REGISTRATION {
+
+    char _user_Name[20];
+    char _password[20];
+    char _answer_City[20];
+    char _answer_Pet[20];
+    char _answer_Vehicle[20];
+
+};
+typedef struct REGISTRATION _REGISTRATION;
+
+// -------------------------------------------- GLOBAL VARIABLES ----------------------------------------------
+
+_REGISTRATION _sign_up;
+
 
 // Function declaration.
 
@@ -119,24 +139,74 @@ void _encryption_And_Decryption(char *_data_pointer){
 
 }
 
-// -------------------------------------------- DEFINE DAYATYPE -----------------------------------------------
 
-struct REGISTRATION {
+bool _verify_User(void){
 
-    char _user_Name[20];
-    char _password[20];
-    char _answer_City[20];
-    char _answer_Pet[20];
-    char _answer_Vehicle[20];
+        system("cls");
+        _border(28, 121);
+        gotoxy(45, 2);
+        printf("--WELCOME TO THE VERIFY YOURSELF--");
+        gotoxy(32, 3);
+        printf("-----------------------------------------------------------");
 
-};
-typedef struct REGISTRATION _REGISTRATION;
+        // First fetch all the Siged-up data from data-base or file.
 
-// -------------------------------------------- GLOBAL VARIABLES ----------------------------------------------
+        _REGISTRATION _store_Fetched_Signed_Up_Data;
 
-_REGISTRATION _sign_up;
+        FILE * _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._user_Name);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._user_Name);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._password);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._password);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_City);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_City);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Pet);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Pet);
+
+        fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Vehicle);
+        _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Vehicle);
+
+        fclose(_file_Pointer);
+
+        gotoxy(32, 4);
+        printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        fflush(stdin);
+        gets(_sign_up._user_Name);
+
+        gotoxy(32, 6);
+        printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        gets(_sign_up._password);
+
+        _security_Questions(false);
+
+        // Strcmp return 0 if both the strings ar equal.
+
+        if(
+
+            (((!strcmp(_store_Fetched_Signed_Up_Data._user_Name, _sign_up._user_Name) && !strcmp(_store_Fetched_Signed_Up_Data._password, _sign_up._password))
+            && !strcmp(_store_Fetched_Signed_Up_Data._answer_City, _sign_up._answer_City)) && !strcmp(_store_Fetched_Signed_Up_Data._answer_Pet, _sign_up._answer_Pet))
+            && !strcmp(_store_Fetched_Signed_Up_Data._answer_Vehicle, _sign_up._answer_Vehicle)
+
+        ){
+            // If all the data are matched.
+
+            return true;
+
+        }else{
+
+            return false;
+
+        }
+        
+}
+
 
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
+
 // Registration menu.
 
 bool _registration_Menu(void){
@@ -203,6 +273,12 @@ bool _registration_Menu(void){
             }
 
         }else if(_selected_Result == 'U' || _selected_Result == 'u'){
+
+            if(_update_Signed_Up_Information() == true){
+
+                return true;
+
+            }
 
         // This section for SIGNED_UP-DATA-UPDATE.
 
@@ -278,7 +354,6 @@ bool _sign_Up(void){
         gotoxy(32, 3);
         printf("-----------------------------------------------------------");
 
-        // Control came here mean already Signed-data is exists, Here will verify the may user want to delete this existing account and this account's data.
         _red();
         gotoxy(3, 4);
         printf("ALREADY SIGNED-UP, IF YOU WANT REALLY TO DELETE YOUR EXISTING ACCOUNT WITH ALL THE RECORDS WHICH ARE PRESENT AT THE");
@@ -287,65 +362,16 @@ bool _sign_Up(void){
         _reset();
 
         char _user_Choice = getch();
-        
+    
         if (_user_Choice == 'Y' || _user_Choice == 'y')
         {
 
-            system("cls");
-            _border(28, 121);
-            gotoxy(45, 2);
-            printf("--WELCOME TO THE VERIFY YOURSELF--");
-            gotoxy(32, 3);
-            printf("-----------------------------------------------------------");
+            if(_verify_User() == true){
 
-            // First fetch all the Siged-up data from data-base or file.
-
-            _REGISTRATION _store_Fetched_Signed_Up_Data;
-
-            FILE * _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
-
-            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._user_Name);
-            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._user_Name);
-
-            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._password);
-            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._password);
-
-            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_City);
-            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_City);
-
-            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Pet);
-            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Pet);
-
-            fscanf(_file_Pointer, "%s", &_store_Fetched_Signed_Up_Data._answer_Vehicle);
-            _encryption_And_Decryption(&_store_Fetched_Signed_Up_Data._answer_Vehicle);
-
-            fclose(_file_Pointer);
-
-            gotoxy(32, 4);
-            printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
-            fflush(stdin);
-            gets(_sign_up._user_Name);
-
-            gotoxy(32, 6);
-            printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
-            gets(_sign_up._password);
-
-            _security_Questions(false);
-
-            // Strcmp return 0 if both the strings ar equal.
-
-            if(
-
-                (((!strcmp(_store_Fetched_Signed_Up_Data._user_Name, _sign_up._user_Name) && !strcmp(_store_Fetched_Signed_Up_Data._password, _sign_up._password))
-                && !strcmp(_store_Fetched_Signed_Up_Data._answer_City, _sign_up._answer_City)) && !strcmp(_store_Fetched_Signed_Up_Data._answer_Pet, _sign_up._answer_Pet))
-                && !strcmp(_store_Fetched_Signed_Up_Data._answer_Vehicle, _sign_up._answer_Vehicle)
-
-            ){
-
-                // Control came here mean the taken data and Signed-up time data both are equal and user give permission to delete all teh data.
+                // Control came here mean the taken data and Signed-up time data both are equal and user give permission to delete all the data.
 
                 remove("PASSWORD/DATA.txt");
-                 
+                    
 
                 system("cls");
                 _border(28, 121);
@@ -361,7 +387,7 @@ bool _sign_Up(void){
                 _reset();
                 printf("PRESS \'E\' FOR THE \'EXIT\' OR \'S\' FOR SIGN UP.");
 
-                _user_Choice = getch();
+                char _user_Choice = getch();
 
                 if (_user_Choice == 'e' || _user_Choice == 'E')
                 {
@@ -374,8 +400,6 @@ bool _sign_Up(void){
                     _registration_Menu();
 
                 }
-                
-                
 
 
             }else{
@@ -404,13 +428,11 @@ bool _sign_Up(void){
 
             }
 
-            
         }else
         {
 
             // If user selected that user don't need to delete his/her accound the will be redirect to the registration menu.
 
-            
             _reset();
             _registration_Menu();
 
@@ -800,5 +822,256 @@ bool _log_In(void){
 
     }
 
+
+}
+
+// Update Sign-up information
+
+bool _update_Signed_Up_Information(void){
+
+    // First verify thye origian user.
+
+    char _user_Choice;
+
+    if(_verify_User() == true){
+
+        // Control came here mean user entered correct User-name, password, and security question's answer, So all the information able to update.
+
+        // Heading.
+
+        system("cls");
+        _border(28, 121);
+        gotoxy(45, 2);
+        printf("--WELCOME TO UPDATE SIGNED-UP INFORMATION--");
+        gotoxy(32, 3);
+        printf("-----------------------------------------------------------");
+
+        FILE *_source_File_Pointer = fopen("PASSWORD/DATA.txt", "r");
+        FILE *_destination_File_pointer = fopen("PASSWORD/TEMPORARY.txt", "w");
+
+        char _store_Data[20];
+
+        for(int _loop = 1; _loop <= 5; _loop++){
+
+            fscanf(_source_File_Pointer, "%s", &_store_Data);
+            _encryption_And_Decryption(_store_Data);
+
+            if(_loop == 1){
+
+                gotoxy(3, 6);
+                printf("YOUR USER-NAME IS \"%s\", DO YOU WANT TO UPDATE YOUR USER NAME, PRESS \'Y\' FOR YES, \'N\' FOR NO:", _store_Data);
+
+                _user_Choice = getch();
+
+                if (_user_Choice == 'y' || _user_Choice == 'Y')
+                {
+
+                        fflush(stdin);
+
+                        gotoxy(3, 7);
+                        printf("ENTER YOUR-USER NAME:");
+                        gets(_store_Data);
+
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                }
+                else
+                {
+                
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                        continue;
+                    
+                }
+                
+
+            }else if(_loop == 2){
+
+                gotoxy(3, 9);
+                printf("YOUR PASSWORD IS \"%s\", DO YOU WANT TO UPDATE PASSOWORD, PRESS \'Y\' FOR YES, \'N\' FOR NO:", _store_Data);
+
+                _user_Choice = getch();
+
+                if (_user_Choice == 'y' || _user_Choice == 'Y')
+                {
+
+                        fflush(stdin);
+
+                        gotoxy(3, 10);
+                        printf("ENTER YOUR PASSWORD:");
+                        gets(_store_Data);
+
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                }
+                else
+                {
+
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                        continue;
+
+                }
+
+            }else if(_loop == 3){
+
+                gotoxy(3, 12);
+                printf("YOUR QUESTION'S ONE ANSWER IS \"%s\", TO UPDATE YOUR ANSWER, PRESS \'Y\' FOR YES, \'N\' FOR NO:", _store_Data);
+
+                _user_Choice = getch();
+
+                if (_user_Choice == 'y' || _user_Choice == 'Y')
+                {
+
+                        fflush(stdin);
+
+                        gotoxy(3, 13);
+                        printf("ENTER YOUR QUESTION'S ONE ANSWER:");
+                        gets(_store_Data);
+
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                }
+                else
+                {
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                        continue;
+
+                }
+
+            }else if(_loop == 4){
+
+                gotoxy(3, 16);
+                printf("YOUR QUESTION'S TWO ANSWER IS \"%s\", TO UPDATE YOUR QUESTION'S TWO ANSWER, PRESS \'Y\' FOR YES, \'N\' FOR NO:", _store_Data);
+
+                _user_Choice = getch();
+
+                if (_user_Choice == 'y' || _user_Choice == 'Y')
+                {
+
+                        fflush(stdin);
+
+                        gotoxy(3, 17);
+                        printf("ENTER QUESTION'S TWO ANSWER:");
+                        gets(_store_Data);
+
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                }
+                else
+                {
+
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s\n", _store_Data);
+
+                        continue;
+
+                }
+
+            }else{
+
+                gotoxy(3, 19);
+                printf("YOUR QUESTION'S THREE ANSWER IS \"%s\",TO UPDATE YOUR QUESTION'S THREE ANSWER, PRESS \'Y\' FOR YES, \'N\' FOR NO:", _store_Data);
+
+                _user_Choice = getch();
+
+                if (_user_Choice == 'y' || _user_Choice == 'Y')
+                {
+
+                        fflush(stdin);
+
+                        gotoxy(3, 20);
+                        printf("ENTER QUESTION'S THREE ANSWER:");
+                        gets(_store_Data);
+
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s", _store_Data);
+                }
+                else
+                {
+                    
+                        _encryption_And_Decryption(_store_Data);
+                        fprintf(_destination_File_pointer, "%s", _store_Data);
+
+                        continue;
+
+                }
+
+            }
+
+        }
+
+        _green();
+        gotoxy(3, 24);
+
+        printf("DO YOU PROCEED ALL THE UPDATION PRESS \'Y\' FOR \'N\' FOR NO.");
+
+        _user_Choice = getch();
+
+        if (_user_Choice == 'Y' || _user_Choice == 'y')
+        {
+
+
+            fclose(_source_File_Pointer);
+            fclose(_destination_File_pointer);
+
+            remove("PASSWORD/DATA.txt");
+            rename("PASSWORD/TEMPORARY.txt", "PASSWORD/DATA.txt");
+
+            gotoxy(3, 25);
+            printf("UPDATION COMPLETE YOU MUST REMEMBER THE NEW INFORMATIONS, YOU WILL REDIRECT TO THE MENU, PRESS ANY KEY TO CONTINUE.");
+            getch();
+            _reset();
+
+            return true;
+
+        }else{
+
+            fclose(_source_File_Pointer);
+            fclose(_destination_File_pointer);
+
+            remove("PASSWORD/TEMPORARY.txt");
+
+            _reset();
+            gotoxy(3, 25);
+            printf("UPDATION STOPED PRESS ANY KEY FOR GO TO THE REGISTRATION MENU.");
+            getch();
+            _registration_Menu();
+
+        }
+
+    }else{
+
+        // Control came here mean may be the user enterd wrong information or may be the user is dummy.
+
+        _red();
+        gotoxy(32, 15);
+        printf("YOUR ENTERED INFORMATIONS ARE NOT MATCHED, PLEASE TRY AGAIN LATER.");
+
+        gotoxy(32, 16);
+        printf("PRESS \'R\' FOR GO TO THE REGISTRATION MENUE, \'E\' FOR EXIT.");
+        _reset();
+
+        _user_Choice = getch();
+
+        if(_user_Choice == 'R' || _user_Choice == 'r'){
+
+            _registration_Menu();
+
+        }else{
+
+            exit(1);
+
+        }
+
+    }
 
 }
