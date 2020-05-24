@@ -16,6 +16,7 @@ void _reset(void);
 bool _sign_Up(void);
 void _encryption_And_Decryption(char *);
 void _security_Questions(bool);
+int _log_In(void);
 
 int main (void){
 
@@ -130,6 +131,7 @@ _REGISTRATION _sign_up;
 
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
 // Registration menu.
+
 int _registration_Menu(void){
 
     system("cls");
@@ -170,12 +172,22 @@ int _registration_Menu(void){
 
         // Registration
 
-
         // Comparing user choice in registration section.
 
         if(_selected_Result == 'L' || _selected_Result == 'l'){
 
         // This section for LOG-IN.
+
+            // Heading.
+
+            fflush(stdin);
+            system("cls");
+            _border(28, 121);
+            gotoxy(45, 2);
+            printf("--WELCOME TO THE REGISTRATION--");
+            gotoxy(32, 3);
+            printf("-----------------------------------------------------------");    
+            _log_In();
 
         }else if(_selected_Result == 'U' || _selected_Result == 'u'){
 
@@ -185,7 +197,7 @@ int _registration_Menu(void){
 
         // This section for SIGN-UP.
 
-        _sign_Up();
+            _sign_Up();
 
         }
 
@@ -379,31 +391,29 @@ bool _sign_Up(void){
 
             
             _reset();
-
             _registration_Menu();
 
         }
         
-    }
+    }else
+    {
+        // If don't having any Signed-up data the this below section of code for this.
+
+        system("cls");
+        _border(28, 121);
+        gotoxy(45, 2);
+        printf("--WELCOME TO THE SIGN-UP--");
+        gotoxy(32, 3);
+        printf("-----------------------------------------------------------");
+
+        // Taking the user name.
 
 
-    // If don't having any Signed-up data the this below section of code for this.
+        int _user_Name_Lenght;
+        int _exceed_Time = 0;
+        int _update_Y_Axis = 8;
 
-    system("cls");
-    _border(28, 121);
-    gotoxy(45, 2);
-    printf("--WELCOME TO THE SIGN-UP--");
-    gotoxy(32, 3);
-    printf("-----------------------------------------------------------");
-
-    // Taking the user name.
-
-
-    int _user_Name_Lenght;
-    int _exceed_Time = 0;
-    int _update_Y_Axis = 8;
-
-    while(1){
+        while(1){
 
         _exceed_Time++;
         _update_Y_Axis++;
@@ -452,27 +462,27 @@ bool _sign_Up(void){
 
         }
 
-    }
+        }
 
-    system("cls");
-    _border(28, 121);
-    gotoxy(45, 2);
-    printf("--WELCOME TO THE SIGN-UP--");
-    gotoxy(32, 3);
-    printf("-----------------------------------------------------------");
+        system("cls");
+        _border(28, 121);
+        gotoxy(45, 2);
+        printf("--WELCOME TO THE SIGN-UP--");
+        gotoxy(32, 3);
+        printf("-----------------------------------------------------------");
 
-    // Taking the password.
+        // Taking the password.
 
-    _sign_up._password[20];
-    int _password_Lenght;
-    _exceed_Time = 0;
-    _update_Y_Axis = 8;
+        _sign_up._password[20];
+        int _password_Lenght;
+        _exceed_Time = 0;
+        _update_Y_Axis = 8;
 
-    // Use of this below boolen array is the compare the password's pattern. INDEX 0, 1, 2 will denote the upper-case, lowercase, spcial-charter recpectivly.
+        // Use of this below boolen array is the compare the password's pattern. INDEX 0, 1, 2 will denote the upper-case, lowercase, spcial-charter recpectivly.
 
-    bool _password_Pattern[3] = {[0 ... 2] = false};
+        bool _password_Pattern[3] = {[0 ... 2] = false};
 
-    while(1){
+        while(1){
 
         _exceed_Time++;
         _update_Y_Axis++;
@@ -574,10 +584,12 @@ bool _sign_Up(void){
         printf("WRONG PASSWORD FOLLOW THE GUIDELINE.");
         _reset();
 
+        }
+
+        return false;
+        
     }
-
-    return false;
-
+    
 }
 
 // Security questions
@@ -656,4 +668,37 @@ void _putting_Sign_Up_Data_On_The_Data_Base(bool _permission_To_Clean_File){
 
     fprintf(_file_Pointer, "%s", _sign_up._answer_Vehicle);
 
+}
+
+// Login-in or Sign-up time.
+
+int _log_In(void){
+
+    // First fetching User-name and Password from file.
+
+    FILE * _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
+
+    char _user_Name[20];
+    char _password[20];
+
+    if(_file_Pointer == NULL){
+
+        _red();
+        gotoxy(32, 8);
+        printf("FILE NOT FOUND. YOUR DATA HASS BEEN LOSSED");
+
+
+    }else{
+        fscanf(_file_Pointer, "%s", &_user_Name);
+        _encryption_And_Decryption(&_user_Name);
+
+        fscanf(_file_Pointer, "%s", &_password);
+        _encryption_And_Decryption(&_password);
+
+        printf("%s\n", _user_Name);
+        printf("%s\n", _password);
+    }
+
+
+    return 0;
 }
