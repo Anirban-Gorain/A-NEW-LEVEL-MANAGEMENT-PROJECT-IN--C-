@@ -594,7 +594,7 @@ bool _sign_Up(void){
             _putting_Sign_Up_Data_On_The_Data_Base(false);
 
             gotoxy(32, 14);
-            printf("SIGN-UP DONE, YOU WILL REDIRECT YO THE MENUE, PRESS ANY KEY TO CONTINUE.");
+            printf("SIGN-UP DONE, YOU WILL REDIRECT TO THE MENUE, PRESS ANY KEY TO CONTINUE.");
             getch();
 
             return true;
