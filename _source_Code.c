@@ -973,7 +973,7 @@ bool _update_Signed_Up_Information(void)
                 else if (_loop == 4)
                 {
 
-                    gotoxy(3, 16);
+                    gotoxy(3, 15);
                     printf("YOUR QUESTION'S TWO ANSWER IS \"%s\", TO UPDATE YOUR QUESTION'S TWO ANSWER, PRESS \'Y\' FOR YES, \'N\' FOR NO:", _store_Data);
 
                     _user_Choice = getch();
@@ -983,7 +983,7 @@ bool _update_Signed_Up_Information(void)
 
                         fflush(stdin);
 
-                        gotoxy(3, 17);
+                        gotoxy(3, 16);
                         printf("ENTER QUESTION'S TWO ANSWER:");
                         gets(_store_Data);
                         _single_Quote_Fixer(&_store_Data);
@@ -1003,7 +1003,7 @@ bool _update_Signed_Up_Information(void)
                 else
                 {
 
-                    gotoxy(3, 19);
+                    gotoxy(3, 18);
                     printf("YOUR QUESTION'S THREE ANSWER IS \"%s\",TO UPDATE YOUR QUESTION'S THREE ANSWER, PRESS \'Y\' FOR YES, \'N\' FOR NO:", _store_Data);
 
                     _user_Choice = getch();
@@ -1013,7 +1013,7 @@ bool _update_Signed_Up_Information(void)
 
                         fflush(stdin);
 
-                        gotoxy(3, 20);
+                        gotoxy(3, 19);
                         printf("ENTER QUESTION'S THREE ANSWER:");
                         gets(_store_Data);
                         _single_Quote_Fixer(&_store_Data);
