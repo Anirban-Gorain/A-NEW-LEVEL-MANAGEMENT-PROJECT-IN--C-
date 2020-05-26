@@ -20,6 +20,7 @@ void _security_Questions(bool);
 bool _log_In(void);
 bool _verify_User(void);
 bool _update_Signed_Up_Information(void);
+void _single_Quote_Fixer(char *);
 
 int main(void)
 {
@@ -120,7 +121,7 @@ void _reset(void)
 void _encryption_And_Decryption(char *_data_pointer)
 {
 
-    
+
 
     // The below array is the encryption decryption key.
 
@@ -172,10 +173,12 @@ bool _verify_User(void)
     printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
     fflush(stdin);
     gets(_sign_up._user_Name);
+    _single_Quote_Fixer(&_sign_up._user_Name);
 
     gotoxy(32, 6);
     printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
     gets(_sign_up._password);
+    _single_Quote_Fixer(&_sign_up._password);
 
     _security_Questions(false);
 
@@ -196,6 +199,22 @@ bool _verify_User(void)
 
         return false;
     }
+}
+
+void _single_Quote_Fixer(char *_address_Of_The_User_Enterd_Information){
+
+    for(int _index = 0; *(_address_Of_The_User_Enterd_Information + _index) != 0; _index++){
+
+        // If any index contain ' this single quote then it will replace by normal spare " ".
+
+        if(*(_address_Of_The_User_Enterd_Information + _index) == 39){
+
+            *(_address_Of_The_User_Enterd_Information + _index) = ' ';
+
+        }
+
+    }
+
 }
 
 // ------------------------------------------ REGISTRATION SECTION ---------------------------------------------
@@ -473,6 +492,7 @@ bool _sign_Up(void)
             gotoxy(18, _update_Y_Axis);
             fflush(stdin);
             gets(_sign_up._user_Name);
+            _single_Quote_Fixer(&_sign_up._user_Name);
 
             _user_Name_Lenght = strlen(_sign_up._user_Name);
 
@@ -549,6 +569,7 @@ bool _sign_Up(void)
             printf("ENTER YOUR PASSWORD: ");
             fflush(stdin);
             gets(_sign_up._password);
+            _single_Quote_Fixer(&_sign_up._password);
 
             _password_Lenght = strlen(_sign_up._password);
 
@@ -650,12 +671,14 @@ void _security_Questions(bool _permission)
     gotoxy(32, 8);
     printf("WHAT IS YOUR CITY NAME, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
     gets(_sign_up._answer_City);
+    _single_Quote_Fixer(&_sign_up._answer_City);
 
     // Second question.
 
     gotoxy(32, 10);
     printf("MAY YOU HAVE ANY PET, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
     gets(_sign_up._answer_Pet);
+    _single_Quote_Fixer(&_sign_up._answer_Pet);
 
     // Third question
 
@@ -663,6 +686,8 @@ void _security_Questions(bool _permission)
     fflush(stdin);
     printf("MAY YOU HAVE ANY VEHICLE, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
     gets(_sign_up._answer_Vehicle);
+    _single_Quote_Fixer(&_sign_up._answer_Vehicle);
+
 }
 
 // Putting Sign-up data.
@@ -757,10 +782,12 @@ bool _log_In(void)
         printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
         fflush(stdin);
         gets(_from_User_Username);
+        _single_Quote_Fixer(&_from_User_Username);
 
         gotoxy(32, 10);
         printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
         gets(_from_User_Password);
+        _single_Quote_Fixer(&_from_User_Password);
 
         if ((!strcmp(_fetch_User_Name, _from_User_Username) && !strcmp(_fetch_Password, _from_User_Password)))
         {
@@ -870,6 +897,7 @@ bool _update_Signed_Up_Information(void)
                         gotoxy(3, 7);
                         printf("ENTER YOUR-USER NAME:");
                         gets(_store_Data);
+                        _single_Quote_Fixer(&_store_Data);
 
                         _encryption_And_Decryption(_store_Data);
                         fprintf(_destination_File_pointer, "%s\n", _store_Data);
@@ -899,6 +927,7 @@ bool _update_Signed_Up_Information(void)
                         gotoxy(3, 10);
                         printf("ENTER YOUR PASSWORD:");
                         gets(_store_Data);
+                        _single_Quote_Fixer(&_store_Data);
 
                         _encryption_And_Decryption(_store_Data);
                         fprintf(_destination_File_pointer, "%s\n", _store_Data);
@@ -928,6 +957,7 @@ bool _update_Signed_Up_Information(void)
                         gotoxy(3, 13);
                         printf("ENTER YOUR QUESTION'S ONE ANSWER:");
                         gets(_store_Data);
+                        _single_Quote_Fixer(&_store_Data);
 
                         _encryption_And_Decryption(_store_Data);
                         fprintf(_destination_File_pointer, "%s\n", _store_Data);
@@ -956,6 +986,7 @@ bool _update_Signed_Up_Information(void)
                         gotoxy(3, 17);
                         printf("ENTER QUESTION'S TWO ANSWER:");
                         gets(_store_Data);
+                        _single_Quote_Fixer(&_store_Data);
 
                         _encryption_And_Decryption(_store_Data);
                         fprintf(_destination_File_pointer, "%s\n", _store_Data);
@@ -985,6 +1016,7 @@ bool _update_Signed_Up_Information(void)
                         gotoxy(3, 20);
                         printf("ENTER QUESTION'S THREE ANSWER:");
                         gets(_store_Data);
+                        _single_Quote_Fixer(&_store_Data);
 
                         _encryption_And_Decryption(_store_Data);
                         fprintf(_destination_File_pointer, "%s", _store_Data);
