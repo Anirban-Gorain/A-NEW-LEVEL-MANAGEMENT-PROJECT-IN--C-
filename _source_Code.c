@@ -120,6 +120,8 @@ void _reset(void)
 void _encryption_And_Decryption(char *_data_pointer)
 {
 
+    
+
     // The below array is the encryption decryption key.
 
     char _key[] = {'+', '-', '*', '/'};
