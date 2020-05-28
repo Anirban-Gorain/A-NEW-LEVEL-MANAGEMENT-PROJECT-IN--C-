@@ -151,7 +151,7 @@ bool _verify_User(void)
     gotoxy(32, 3);
     printf("-----------------------------------------------------------");
 
-    // First fetch all the Siged-up data from data-base or file.
+    // First fetch all the Singed-up data from data-base or file.
 
     _REGISTRATION _store_Fetched_Signed_Up_Data;
 
@@ -175,13 +175,13 @@ bool _verify_User(void)
     fclose(_file_Pointer);
 
     gotoxy(32, 4);
-    printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+    printf("ENTER YOUR USER-NAME, WHICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
     fflush(stdin);
     gets(_sign_up._user_Name);
     _single_Quote_Fixer(&_sign_up._user_Name);
 
     gotoxy(32, 6);
-    printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+    printf("ENTER YOUR PASSWORD, WHICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
     gets(_sign_up._password);
     _single_Quote_Fixer(&_sign_up._password);
 
@@ -206,15 +206,15 @@ bool _verify_User(void)
     }
 }
 
-void _single_Quote_Fixer(char *_address_Of_The_User_Enterd_Information){
+void _single_Quote_Fixer(char *_address_Of_The_User_Entered_Information){
 
-    for(int _index = 0; *(_address_Of_The_User_Enterd_Information + _index) != 0; _index++){
+    for(int _index = 0; *(_address_Of_The_User_Entered_Information + _index) != 0; _index++){
 
         // If any index contain ' this single quote then it will replace by normal spare " ".
 
-        if(*(_address_Of_The_User_Enterd_Information + _index) == 39){
+        if(*(_address_Of_The_User_Entered_Information + _index) == 39){
 
-            *(_address_Of_The_User_Enterd_Information + _index) = ' ';
+            *(_address_Of_The_User_Entered_Information + _index) = ' ';
 
         }
 
@@ -279,7 +279,7 @@ bool _registration_Menu(void)
     fflush(stdin);
     scanf("%c", &_selected_Result);
 
-    // Eroor handling, Because if user entered any wrong value.
+    // Error handling, Because if user entered any wrong value.
     if ((_selected_Result == 'L' || _selected_Result == 'l') || (_selected_Result == 'U' || _selected_Result == 'u') || (_selected_Result == 'S' || _selected_Result == 's'))
     {
 
@@ -304,7 +304,7 @@ bool _registration_Menu(void)
             if (_log_In() == true)
             {
 
-                // If login sucessfully.
+                // If login successfully.
 
                 return true;
             }
@@ -328,7 +328,7 @@ bool _registration_Menu(void)
             if (_sign_Up() == true)
             {
 
-                // If login sucessfully.
+                // If login successfully.
 
                 return true;
             }
@@ -340,7 +340,7 @@ bool _registration_Menu(void)
         // If the user want to enter again option.
 
         gotoxy(32, 19);
-        printf("WRONG CHOICE, TRY AGAIN! CLICK A KEY FOR GET A ANOTHE CHANCE.");
+        printf("WRONG CHOICE, TRY AGAIN! CLICK A KEY FOR GET A ANOTHER CHANCE.");
         getch();
         system("cls");
         _border(28, 121);
@@ -394,7 +394,7 @@ bool _sign_Up(void)
         gotoxy(3, 4);
         printf("ALREADY SIGNED-UP, IF YOU WANT REALLY TO DELETE YOUR EXISTING ACCOUNT WITH ALL THE RECORDS WHICH ARE PRESENT AT THE");
         gotoxy(3, 5);
-        printf("CUREENT TIME IN THE DATABASE TO DELETE PRESS \'Y\', GO TO THE BACK MENUE PRESS \'N\':");
+        printf("CURRENT TIME IN THE DATABASE TO DELETE PRESS \'Y\', GO TO THE BACK MENU PRESS \'N\':");
         _reset();
 
         char _user_Choice = getch();
@@ -418,7 +418,7 @@ bool _sign_Up(void)
 
                 gotoxy(32, 12);
                 _green();
-                printf("ALL THE RECORD AND YOUR ACCOUNT SUCESSFULLY DELETED.");
+                printf("ALL THE RECORD AND YOUR ACCOUNT SUCCESSFULLY DELETED.");
                 gotoxy(32, 13);
                 _reset();
                 printf("PRESS \'E\' FOR THE \'EXIT\' OR \'S\' FOR SIGN UP.");
@@ -439,14 +439,14 @@ bool _sign_Up(void)
             else
             {
 
-                // When the control came here wich mean anywhear the Signed-up data and at the cureent time taken data these are not equal.
+                // When the control came here which mean anywhere the Signed-up data and at the current time taken data these are not equal.
 
                 _red();
                 gotoxy(32, 22);
-                printf("YOUR ENTERD DATA ARE NOTE MATCHED WITH THE PREVIOUS TIME SIGNED UP DATA.");
+                printf("YOUR ENTERED DATA ARE NOTE MATCHED WITH THE PREVIOUS TIME SIGNED UP DATA.");
 
                 gotoxy(32, 23);
-                printf("PRESS E FOR EXIT AND P FOR THE PREVIOUS MENUE.");
+                printf("PRESS E FOR EXIT AND P FOR THE PREVIOUS MENU.");
 
                 char _user_Choice = getch();
 
@@ -466,7 +466,7 @@ bool _sign_Up(void)
         else
         {
 
-            // If user selected that user don't need to delete his/her accound the will be redirect to the registration menu.
+            // If user selected that user don't need to delete his/her accont the will be redirect to the registration menu.
 
             _reset();
             _registration_Menu();
@@ -485,7 +485,7 @@ bool _sign_Up(void)
 
         // Taking the user name.
 
-        int _user_Name_Lenght;
+        int _user_Name_Length;
         int _exceed_Time = 0;
         int _update_Y_Axis = 8;
 
@@ -508,7 +508,7 @@ bool _sign_Up(void)
             }
 
             gotoxy(18, _update_Y_Axis);
-            printf("ENTER YOUR USER-NAME, USER-NAME LENGHT MUST BE GRATER 5 CHRACTER AND LESS 20 CHRACTER: ");
+            printf("ENTER YOUR USER-NAME, USER-NAME LENGTH MUST BE GRATER 5 CHARACTER AND LESS 20 CHARACTER: ");
 
             _update_Y_Axis++;
             gotoxy(18, _update_Y_Axis);
@@ -516,11 +516,11 @@ bool _sign_Up(void)
             gets(_sign_up._user_Name);
             _single_Quote_Fixer(&_sign_up._user_Name);
 
-            _user_Name_Lenght = strlen(_sign_up._user_Name);
+            _user_Name_Length = strlen(_sign_up._user_Name);
 
             // If the user name satisfied all the criteria then  this loop will be break.
 
-            if (_user_Name_Lenght > 5 && _user_Name_Lenght < 20)
+            if (_user_Name_Length > 5 && _user_Name_Length < 20)
             {
 
                 break;
@@ -550,11 +550,11 @@ bool _sign_Up(void)
         // Taking the password.
 
         _sign_up._password[20];
-        int _password_Lenght;
+        int _password_Length;
         _exceed_Time = 0;
         _update_Y_Axis = 8;
 
-        // Use of this below boolen array is the compare the password's pattern. INDEX 0, 1, 2 will denote the upper-case, lowercase, spcial-charter recpectivly.
+        // Use of this below boolen array is the compare the password's pattern. INDEX 0, 1, 2 will denote the upper-case, lowercase, spacial-charter respectively.
 
         bool _password_Pattern[3] = {[0 ... 2] = false};
 
@@ -581,9 +581,9 @@ bool _sign_Up(void)
             _green();
 
             gotoxy(32, 26);
-            printf("INCLUDE MINIMUM ONE SPCIAL, ONE LOWER, ONE UPPER, CHARACTERS ALSO INCLUDE NUMBERS.");
+            printf("INCLUDE MINIMUM ONE SPECIAL, ONE LOWER, ONE UPPER, CHARACTERS ALSO INCLUDE NUMBERS.");
             gotoxy(32, 27);
-            printf("PASSWORD LENGHT SHOULD BE GRATER THEN 8 AND LESS THEN 20.");
+            printf("PASSWORD LENGTH SHOULD BE GRATER THEN 8 AND LESS THEN 20.");
 
             _reset();
 
@@ -593,16 +593,16 @@ bool _sign_Up(void)
             gets(_sign_up._password);
             _single_Quote_Fixer(&_sign_up._password);
 
-            _password_Lenght = strlen(_sign_up._password);
+            _password_Length = strlen(_sign_up._password);
 
             // If the PASSWORD satisfied all the criteria then this loop will be break.
 
-            if (_password_Lenght > 5 && _password_Lenght < 20)
+            if (_password_Length > 5 && _password_Length < 20)
             {
 
                 // INDEX 0, 1, 2 will denote the upper-case, lowercase, special-charter respectively.
 
-                for (int _index_Of_Password = 0; _index_Of_Password < _password_Lenght; _index_Of_Password++)
+                for (int _index_Of_Password = 0; _index_Of_Password < _password_Length; _index_Of_Password++)
                 {
                     if ((_password_Pattern[1] != true) && (_sign_up._password[_index_Of_Password] >= 97 && _sign_up._password[_index_Of_Password] <= 122))
                     {
@@ -646,12 +646,12 @@ bool _sign_Up(void)
                 _encryption_And_Decryption(_sign_up._answer_Pet);
                 _encryption_And_Decryption(_sign_up._answer_Vehicle);
 
-                // After sucessfully done to take User-name, Password And three questions's answer store these data on the file.
+                // After successfully done to take User-name, Password And three questions's answer store these data on the file.
 
                 _putting_Sign_Up_Data_On_The_Data_Base(false);
 
                 gotoxy(32, 14);
-                printf("SIGN-UP DONE, YOU WILL REDIRECT TO THE MENUE, PRESS ANY KEY TO CONTINUE.");
+                printf("SIGN-UP DONE, YOU WILL REDIRECT TO THE MENU, PRESS ANY KEY TO CONTINUE.");
                 getch();
 
                 return true;
@@ -691,14 +691,14 @@ void _security_Questions(bool _permission)
     // First question.
 
     gotoxy(32, 8);
-    printf("WHAT IS YOUR CITY NAME, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
+    printf("WHAT IS YOUR CITY NAME, [LENGTH MUST BE LESS THAN 20 CHRAACTER] :");
     gets(_sign_up._answer_City);
     _single_Quote_Fixer(&_sign_up._answer_City);
 
     // Second question.
 
     gotoxy(32, 10);
-    printf("MAY YOU HAVE ANY PET, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
+    printf("MAY YOU HAVE ANY PET, [LENGTH MUST BE LESS THAN 20 CHARACTER] :");
     gets(_sign_up._answer_Pet);
     _single_Quote_Fixer(&_sign_up._answer_Pet);
 
@@ -706,7 +706,7 @@ void _security_Questions(bool _permission)
 
     gotoxy(32, 12);
     fflush(stdin);
-    printf("MAY YOU HAVE ANY VEHICLE, [LENGHT MUST BE LESS THAN 20 CHRACTER] :");
+    printf("MAY YOU HAVE ANY VEHICLE, [LENGTH MUST BE LESS THAN 20 CHRAACTER] :");
     gets(_sign_up._answer_Vehicle);
     _single_Quote_Fixer(&_sign_up._answer_Vehicle);
 
@@ -771,7 +771,7 @@ bool _log_In(void)
 
         gotoxy(32, 11);
         _red();
-        printf("PRESS R FOR REGISTRATION MENUE, E FOR EXIT.");
+        printf("PRESS R FOR REGISTRATION MENU, E FOR EXIT.");
         _reset();
         fflush(stdin);
         _user_Choice = getch();
@@ -801,13 +801,13 @@ bool _log_In(void)
         // Second taking User-name and Password from user.
 
         gotoxy(32, 8);
-        printf("ENTER YOUR USER-NAME, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        printf("ENTER YOUR USER-NAME, WHICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
         fflush(stdin);
         gets(_from_User_Username);
         _single_Quote_Fixer(&_from_User_Username);
 
         gotoxy(32, 10);
-        printf("ENTER YOUR PASSWORD, WICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
+        printf("ENTER YOUR PASSWORD, WHICH ONE YOU USED TO PREVIOUS SIGNED UP TIME :");
         gets(_from_User_Password);
         _single_Quote_Fixer(&_from_User_Password);
 
@@ -824,7 +824,7 @@ bool _log_In(void)
 
             gotoxy(4, 27);
             _red();
-            printf("YOUR GIVEN USER-NAME AND PASSWORD ARE NOT MTCHED, PRESS T FOR TRAY AGAIN, R FOR REGISTRATION MENUE, E FOR EXIT.");
+            printf("YOUR GIVEN USER-NAME AND PASSWORD ARE NOT MATCHED, PRESS T FOR TRAY AGAIN, R FOR REGISTRATION MENU, E FOR EXIT.");
             _reset();
             fflush(stdin);
             _user_Choice = getch();
@@ -1059,7 +1059,7 @@ bool _update_Signed_Up_Information(void)
             _green();
             gotoxy(3, 24);
 
-            printf("DO YOU PROCEED ALL THE UPDATION PRESS \'Y\' FOR \'N\' FOR NO.");
+            printf("DO YOU PROCEED ALL THE UPDATE PRESS \'Y\' FOR \'N\' FOR NO.");
 
             _user_Choice = getch();
 
@@ -1073,7 +1073,7 @@ bool _update_Signed_Up_Information(void)
                 rename("PASSWORD/TEMPORARY.txt", "PASSWORD/DATA.txt");
 
                 gotoxy(3, 25);
-                printf("UPDATION COMPLETE YOU MUST REMEMBER THE NEW INFORMATIONS, YOU WILL REDIRECT TO THE MENU, PRESS ANY KEY TO CONTINUE.");
+                printf("UPDATE COMPLETE YOU MUST REMEMBER THE NEW INFORMATIONS, YOU WILL REDIRECT TO THE MENU, PRESS ANY KEY TO CONTINUE.");
                 getch();
                 _reset();
 
@@ -1089,7 +1089,7 @@ bool _update_Signed_Up_Information(void)
 
                 _reset();
                 gotoxy(3, 25);
-                printf("UPDATION STOPED PRESS ANY KEY FOR GO TO THE REGISTRATION MENU.");
+                printf("UPDATE WAS STOPEED PRESS ANY KEY FOR GO TO THE REGISTRATION MENU.");
                 getch();
                 _registration_Menu();
             }
@@ -1097,14 +1097,14 @@ bool _update_Signed_Up_Information(void)
         else
         {
 
-            // Control came here mean may be the user enterd wrong information or may be the user is dummy.
+            // Control came here mean may be the user entered wrong information or may be the user is dummy.
 
             _red();
             gotoxy(32, 15);
             printf("YOUR ENTERED INFORMATIONS ARE NOT MATCHED, PLEASE TRY AGAIN LATER.");
 
             gotoxy(32, 16);
-            printf("PRESS \'R\' FOR GO TO THE REGISTRATION MENUE, \'E\' FOR EXIT.");
+            printf("PRESS \'R\' FOR GO TO THE REGISTRATION MENU, \'E\' FOR EXIT.");
             _reset();
 
             _user_Choice = getch();
@@ -1124,7 +1124,7 @@ bool _update_Signed_Up_Information(void)
     else
     {
 
-        // If did't found any Singed-up data the this secction of code for this.
+        // If didn't found any Singed-up data the this section of code for this.
 
         system("cls");
         _border(28, 121);
@@ -1140,7 +1140,7 @@ bool _update_Signed_Up_Information(void)
     }
 }
 
-// Menue.
+// Menu.
 
 int _menu(void){
 
@@ -1177,7 +1177,6 @@ int _menu(void){
 void _add_More_Option(){
 
     char _which_Menu_Will_Creat_By_The_User[101];
-    int _number_Of_The_Menue;
     char _extension[] = ".txt";
     char
     _path[] = "MENU/";
@@ -1185,12 +1184,12 @@ void _add_More_Option(){
     char _last_Line_Of_Menu_Dot_Txt[101];
     FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
 
-    // User giving the name of the new menue.
+    // User giving the name of the new menu.
 
     system("cls");
     _border(28, 121);
     gotoxy(50, 2);
-    printf("--WELCOME TO THE NEW MENUE--");
+    printf("--WELCOME TO THE NEW MENU--");
     gotoxy(32, 3);
     printf("-----------------------------------------------------------");
 
@@ -1229,7 +1228,7 @@ void _add_More_Option(){
     _recomendate_Serial_Number++;
 
     gotoxy(32, 5);
-    printf("ENTER THE NAME OF YOUR NEW MENU: [MENU'S NAME MUST BE BETWEEN 100 CHRACTER]");
+    printf("ENTER THE NAME OF YOUR NEW MENU: [MENU'S NAME MUST BE BETWEEN 100 CHARACTER]");
     fflush(stdin);
     gotoxy(32, 6);
     gets(_which_Menu_Will_Creat_By_The_User);
