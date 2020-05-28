@@ -21,15 +21,20 @@ bool _log_In(void);
 bool _verify_User(void);
 bool _update_Signed_Up_Information(void);
 void _single_Quote_Fixer(char *);
+int _menu(void);
+void _add_More_Option();
+int _space_Remover(char *);
 
 int main(void)
 {
 
-    if (_registration_Menu() == true)
-    {
+    _menu();
 
-        printf("DONE");
-    }
+    // if (_registration_Menu() == true)
+    // {
+
+    //     printf("DONE");
+    // }
 
     // getch();
     return 0;
@@ -210,6 +215,23 @@ void _single_Quote_Fixer(char *_address_Of_The_User_Enterd_Information){
         if(*(_address_Of_The_User_Enterd_Information + _index) == 39){
 
             *(_address_Of_The_User_Enterd_Information + _index) = ' ';
+
+        }
+
+    }
+
+}
+
+int _space_Remover(char *_address)
+{
+
+    for(int _index = 0; _address[_index] != 0; _index++)
+    {
+
+        if(_address[_index] == 32)
+        {
+
+            _address[_index] = '-';
 
         }
 
@@ -1116,4 +1138,111 @@ bool _update_Signed_Up_Information(void)
         printf("SIGNED-UP DATA NO FOUND, DO YOU WANT TO GO BACK THE THE PREVIOUS MENU, PRESS ANY KEY CONFORMATION.");
 
     }
+}
+
+// Menue.
+
+int _menu(void){
+
+    // Heading
+
+    system("cls");
+    _border(28, 121);
+    gotoxy(50, 2);
+    printf("--WELCOME TO THE MENU--");
+    gotoxy(32, 3);
+    printf("-----------------------------------------------------------");
+
+    FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
+
+    char _store_Option[101];
+    int _choice_Of_The_User;
+
+    for(int _update_Y_Axis = 1 ;!feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis += 1){
+
+        fscanf(_address_Of_The_Menu_Dot_Txt, "%s", &_store_Option);
+
+        gotoxy(32, 3 + _update_Y_Axis);
+        printf("%s", _store_Option);
+
+    }
+
+    getch();
+    _add_More_Option();
+
+}
+
+// Add more option
+
+void _add_More_Option(){
+
+    char _which_Menu_Will_Creat_By_The_User[101];
+    int _number_Of_The_Menue;
+    char _extension[] = ".txt";
+    char
+    _path[] = "MENU/";
+    int _serial_Number_Of_The_New_Menu;
+    char _last_Line_Of_Menu_Dot_Txt[101];
+    FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
+
+    // User giving the name of the new menue.
+
+    system("cls");
+    _border(28, 121);
+    gotoxy(50, 2);
+    printf("--WELCOME TO THE NEW MENUE--");
+    gotoxy(32, 3);
+    printf("-----------------------------------------------------------");
+
+    // Fetch the last line of the MENU.txt
+
+    while(!feof(_address_Of_The_Menu_Dot_Txt)){
+
+        fscanf(_address_Of_The_Menu_Dot_Txt, "%s", &_last_Line_Of_Menu_Dot_Txt);
+
+    }
+
+    // This below section of code to find the next serial number like on the menu file if the last line is 1 then recomendate will be 2
+
+    // Find how many character have (Of the last of the file) from the one index to till before the ')'. Why starting the index from the 1? Answer? >> The lowest number will be 1) like this, It confrom that block 0 never will contain any time ')'. And I want to find where have the ')';
+
+    int _find_Bracket_File;
+
+    for (_find_Bracket_File = 1; *(_last_Line_Of_Menu_Dot_Txt + _find_Bracket_File) != ')'; _find_Bracket_File++);
+
+    char *_Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
+
+    for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
+    {
+
+        *(_Address_of_The_Allocated_Block_1 + _index) = *(_last_Line_Of_Menu_Dot_Txt + _index);
+
+    }
+
+    // Assing null at the last of allocated memory.
+
+    *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
+
+    // Now convert the two (1st is from the File, 2st is form the User-new-option) fetched serial number from character to integer value.
+
+    int _recomendate_Serial_Number = atoi(_Address_of_The_Allocated_Block_1);
+    _recomendate_Serial_Number++;
+
+    gotoxy(32, 5);
+    printf("ENTER THE NAME OF YOUR NEW MENU: [MENU'S NAME MUST BE BETWEEN 100 CHRACTER]");
+    fflush(stdin);
+    gotoxy(32, 6);
+    gets(_which_Menu_Will_Creat_By_The_User);
+    _space_Remover(&_which_Menu_Will_Creat_By_The_User);
+
+    // Add the new menu to the MENU.txt file
+
+    fprintf(_address_Of_The_Menu_Dot_Txt, "\n\n%d)%s.", _recomendate_Serial_Number, _which_Menu_Will_Creat_By_The_User);
+
+    // Add the path of the new menu create by the user on the PATH.txt file.
+
+    FILE *_address_Of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "a+");
+    fprintf(_address_Of_The_Path_Dot_Txt, "\n%d)MENU/%s.txt", _recomendate_Serial_Number, _which_Menu_Will_Creat_By_The_User);
+
+
 }
