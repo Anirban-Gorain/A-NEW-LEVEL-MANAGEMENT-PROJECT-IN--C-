@@ -1222,11 +1222,11 @@ void _add_More_Option(){
 
     }
 
-    // Assing null at the last of allocated memory.
+    // Assign null at the last of allocated memory.
 
     *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
 
-    // Now convert the two (1st is from the File, 2st is form the User-new-option) fetched serial number from character to integer value.
+    // Now convert the two (1st is from the File, 2'st is form the User-new-option) fetched serial number from character to integer value.
 
     int _recomendate_Serial_Number = atoi(_Address_of_The_Allocated_Block_1);
     free(_Address_of_The_Allocated_Block_1);
@@ -1256,15 +1256,31 @@ void _add_More_Option(){
 
 int _delete_Menu(void){
 
+    // When will not have any data on the MENU.txt file ind if this function will call then it is a error the below of code to fix these error.
+
+    FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
+    fseek(_address_Of_The_Menu_Dot_Txt, 0, 2);
+    int _is_Empty = ftell(_address_Of_The_Menu_Dot_Txt);
+
+
+    if(_is_Empty == 0)
+        return -1;
+
+    // When checked file empty or not help of fseek moved the cursor but now it will be fixing.
+
+    fseek(_address_Of_The_Menu_Dot_Txt, 2, 0);
+
+    // When file MENU.txt will contain records then don't will not have any error menu containing related so user may delete records.
+
     system("cls");
     _border(28, 121);
     gotoxy(45, 2);
     printf("--WELCOME TO THE DELETE A MENU--");
     gotoxy(32, 3);
     printf("-----------------------------------------------------------");
-    int _update_Y_Axis = 1;
 
-    FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
+
+    int _update_Y_Axis = 1;
     int _user_Selected_Result;
     char _to_Store_Menu_Diffrent_Operation[101];
     char _to_Store_Path_Deletion_Time[101];
