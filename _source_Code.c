@@ -24,11 +24,12 @@ void _single_Quote_Fixer(char *);
 int _menu(void);
 void _add_More_Option();
 int _space_Remover(char *);
+int _delete_Menu(void);
 
 int main(void)
 {
 
-    _menu();
+    _delete_Menu();
 
     // if (_registration_Menu() == true)
     // {
@@ -1166,6 +1167,8 @@ int _menu(void){
         printf("%s", _store_Option);
 
     }
+    gotoxy(32, 27);
+    printf("PRESS \'D\' FOR DELETE OPTION WITH ALL THE RECORDS OF THE PARTICULAR OPTION, AND \'A\' FOR ADD A NEW OPTION.");
 
     getch();
     _add_More_Option();
@@ -1183,6 +1186,7 @@ void _add_More_Option(){
     int _serial_Number_Of_The_New_Menu;
     char _last_Line_Of_Menu_Dot_Txt[101];
     FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
+
 
     // User giving the name of the new menu.
 
@@ -1225,7 +1229,9 @@ void _add_More_Option(){
     // Now convert the two (1st is from the File, 2st is form the User-new-option) fetched serial number from character to integer value.
 
     int _recomendate_Serial_Number = atoi(_Address_of_The_Allocated_Block_1);
+    free(_Address_of_The_Allocated_Block_1);
     _recomendate_Serial_Number++;
+
 
     gotoxy(32, 5);
     printf("ENTER THE NAME OF YOUR NEW MENU: [MENU'S NAME MUST BE BETWEEN 100 CHARACTER]");
@@ -1243,5 +1249,199 @@ void _add_More_Option(){
     FILE *_address_Of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "a+");
     fprintf(_address_Of_The_Path_Dot_Txt, "\n%d)MENU/%s.txt", _recomendate_Serial_Number, _which_Menu_Will_Creat_By_The_User);
 
+
+}
+
+// Delete menu function.
+
+int _delete_Menu(void){
+
+    system("cls");
+    _border(28, 121);
+    gotoxy(45, 2);
+    printf("--WELCOME TO THE DELETE A MENU--");
+    gotoxy(32, 3);
+    printf("-----------------------------------------------------------");
+    int _update_Y_Axis = 1;
+
+    FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
+    int _user_Selected_Result;
+    char _to_Store_Menu_Diffrent_Operation[101];
+    char _to_Store_Path_Deletion_Time[101];
+
+    for(; !feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis++)
+    {
+
+        fscanf(_address_Of_The_Menu_Dot_Txt, "%s", &_to_Store_Menu_Diffrent_Operation);
+        gotoxy(32, 3 + _update_Y_Axis);
+        printf("%s", _to_Store_Menu_Diffrent_Operation);
+
+    }
+    fclose(_address_Of_The_Menu_Dot_Txt);
+
+    gotoxy(32, 4 + _update_Y_Axis);
+    printf("ENTER THE SERIAL NUMBER OF THE MENU WHICH MENU YOU WANT TO DELETE:");
+    fflush(stdin);
+    scanf("%d", &_user_Selected_Result);
+
+    // Finding how many menu have on the MENU.txt file.
+
+    int _find_Bracket_File;
+
+    for (_find_Bracket_File = 1; *(_to_Store_Menu_Diffrent_Operation + _find_Bracket_File) != ')'; _find_Bracket_File++);
+
+    char *_Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
+
+    for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
+    {
+
+        *(_Address_of_The_Allocated_Block_1 + _index) = *(_to_Store_Menu_Diffrent_Operation + _index);
+
+    }
+
+    // Assign null at the last of allocated memory.
+
+    *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
+
+    // Now convert the two (1st is from the File, 2st is form the User-new-option) fetched serial number from character to integer value.
+
+    int _quantity_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
+    free(_Address_of_The_Allocated_Block_1);
+
+    // Removing the user instructed menu.
+
+    _address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "r");
+    FILE *_address_Of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "r");
+    FILE *_address_Of_The_Temporary_MENU_File = fopen("MENU/TEMPORARY_MENU.txt", "w");
+    FILE *_address_Of_The_Temporary_PATH_File = fopen("MENU/PATH/TEMPORARY_PATH.txt", "w");
+
+    for(int _where_Will_Skip = 1; _where_Will_Skip <= _quantity_Of_The_Menu; _where_Will_Skip++)
+    {
+
+        fscanf(_address_Of_The_Menu_Dot_Txt, "%s", _to_Store_Menu_Diffrent_Operation);
+        fscanf(_address_Of_The_Path_Dot_Txt, "%s", _to_Store_Path_Deletion_Time);
+
+        if (_where_Will_Skip != _user_Selected_Result)
+        {
+
+            fprintf(_address_Of_The_Temporary_MENU_File, "\n%s", _to_Store_Menu_Diffrent_Operation);
+            fprintf(_address_Of_The_Temporary_PATH_File, "\n%s", _to_Store_Path_Deletion_Time);
+
+        }
+
+    }
+
+    fclose(_address_Of_The_Menu_Dot_Txt);
+    fclose(_address_Of_The_Path_Dot_Txt);
+    fclose(_address_Of_The_Temporary_MENU_File);
+    fclose(_address_Of_The_Temporary_PATH_File);
+
+    remove("MENU/MENU.txt");
+    remove("MENU/PATH/PATH.txt");
+    rename("MENU/TEMPORARY_MENU.txt", "MENU/MENU.txt");
+    rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
+
+    _serial_Number_Fixer();
+
+}
+
+// Serial number fixer.
+
+void _serial_Number_Fixer(void){
+
+    FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "r");
+    FILE *_address_Of_Temporary_File_One = fopen("MENU/TEMPORARY_MENU.txt", "a+");
+    FILE *_address_Of_The_Menu_Path_Txt = fopen("MENU/PATH/PATH.txt", "r");
+    FILE *_address_Of_Temporary_File_Two = fopen("MENU/PATH/TEMPORARY_PATH.txt", "a+");
+    char _store_Menu_And_Path_For_Operations[101];
+    int _which_Item_Will_Be_Delete_In_Decreasing_Order;
+    int _assign_Assigner;
+    int _total_Length_Of_Each_Menu;
+    int _serial_Number = 1;
+
+    // This below codes for fix serial number of the MENU.txt.
+
+    while (!feof(_address_Of_The_Menu_Dot_Txt))
+    {
+
+        // Storing each menu one by one.
+
+        fscanf(_address_Of_The_Menu_Dot_Txt, "%s", _store_Menu_And_Path_For_Operations);
+
+        for (_which_Item_Will_Be_Delete_In_Decreasing_Order = 1; *(_store_Menu_And_Path_For_Operations + _which_Item_Will_Be_Delete_In_Decreasing_Order) != ')'; _which_Item_Will_Be_Delete_In_Decreasing_Order++);
+        _which_Item_Will_Be_Delete_In_Decreasing_Order--;
+
+        for (; _which_Item_Will_Be_Delete_In_Decreasing_Order != -1; _which_Item_Will_Be_Delete_In_Decreasing_Order--)
+        {
+
+            _assign_Assigner = _which_Item_Will_Be_Delete_In_Decreasing_Order;
+            _total_Length_Of_Each_Menu = strlen(_store_Menu_And_Path_For_Operations);
+            _total_Length_Of_Each_Menu--;
+
+            for(; _assign_Assigner <= (_total_Length_Of_Each_Menu - 1); _assign_Assigner++)
+            {
+
+                _store_Menu_And_Path_For_Operations[_assign_Assigner] = _store_Menu_And_Path_For_Operations[_assign_Assigner + 1];
+
+            }
+
+            _store_Menu_And_Path_For_Operations[_assign_Assigner] = '\0';
+
+        }
+
+        fprintf(_address_Of_Temporary_File_One, "\n%d%s", _serial_Number, _store_Menu_And_Path_For_Operations);
+
+        _serial_Number++;
+
+    }
+    fclose(_address_Of_The_Menu_Dot_Txt);
+    fclose(_address_Of_Temporary_File_One);
+    remove("MENU/MENU.txt");
+    rename("MENU/TEMPORARY_MENU.txt", "MENU/MENU.txt");
+
+    // This below codes for fix serial number of the PATH.txt.
+
+    _which_Item_Will_Be_Delete_In_Decreasing_Order = 0;
+    _assign_Assigner = 0;
+    _total_Length_Of_Each_Menu = 0;
+    _serial_Number = 1;
+
+    while (!feof(_address_Of_The_Menu_Path_Txt))
+    {
+
+        // Storing each menu one by one.
+
+        fscanf(_address_Of_The_Menu_Path_Txt, "%s", _store_Menu_And_Path_For_Operations);
+
+        for (_which_Item_Will_Be_Delete_In_Decreasing_Order = 1; *(_store_Menu_And_Path_For_Operations + _which_Item_Will_Be_Delete_In_Decreasing_Order) != ')'; _which_Item_Will_Be_Delete_In_Decreasing_Order++);
+        _which_Item_Will_Be_Delete_In_Decreasing_Order--;
+
+        for (; _which_Item_Will_Be_Delete_In_Decreasing_Order != -1; _which_Item_Will_Be_Delete_In_Decreasing_Order--)
+        {
+
+            _assign_Assigner = _which_Item_Will_Be_Delete_In_Decreasing_Order;
+            _total_Length_Of_Each_Menu = strlen(_store_Menu_And_Path_For_Operations);
+            _total_Length_Of_Each_Menu--;
+
+            for(; _assign_Assigner <= (_total_Length_Of_Each_Menu - 1); _assign_Assigner++)
+            {
+
+                _store_Menu_And_Path_For_Operations[_assign_Assigner] = _store_Menu_And_Path_For_Operations[_assign_Assigner + 1];
+
+            }
+
+            _store_Menu_And_Path_For_Operations[_assign_Assigner] = '\0';
+
+        }
+
+        fprintf(_address_Of_Temporary_File_Two, "\n%d%s", _serial_Number, _store_Menu_And_Path_For_Operations);
+
+        _serial_Number++;
+
+    }
+    fclose(_address_Of_The_Menu_Path_Txt);
+    fclose(_address_Of_Temporary_File_Two);
+    remove("MENU/PATH/PATH.txt");
+    rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
 
 }
