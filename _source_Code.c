@@ -1215,7 +1215,7 @@ int _menu(void){
 
             _return_Values = _delete_Menu();
             gotoxy(32, 26);
-            if(_return_Values != -1)
+            if(_return_Values != -1 && _return_Values != 0)
                 printf("DELETE SUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
             else
                 printf("DELETE UNSUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
@@ -1410,67 +1410,85 @@ int _delete_Menu(void){
     fclose(_address_Of_The_Menu_Dot_Txt);
 
     gotoxy(32, 4 + _update_Y_Axis);
-    printf("ENTER THE SERIAL NUMBER OF THE MENU WHICH MENU YOU WANT TO DELETE:");
+    printf("ENTER THE SERIAL NUMBER OF THE MENU WHICH MENU YOU WANT TO DELETE, OR PRESS \'P\' TO GO");
+    gotoxy(32, 5 + _update_Y_Axis);
+    printf("TO THE PREVIOUS MENU:");
     fflush(stdin);
     scanf("%d", &_user_Selected_Result);
 
-    // Finding how many menu have on the MENU.txt file.
+    // P == 80 and p == 112 
 
-    int _find_Bracket_File;
+    if(_user_Selected_Result != 'P' || _user_Selected_Result != 'p'){
 
-    for (_find_Bracket_File = 1; *(_to_Store_Menu_Diffrent_Operation + _find_Bracket_File) != ')'; _find_Bracket_File++);
+        // Finding how many menu have on the MENU.txt file.
 
-    char *_Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
+        int _find_Bracket_File;
 
-    for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
-    {
+        for (_find_Bracket_File = 1; *(_to_Store_Menu_Diffrent_Operation + _find_Bracket_File) != ')'; _find_Bracket_File++);
 
-        *(_Address_of_The_Allocated_Block_1 + _index) = *(_to_Store_Menu_Diffrent_Operation + _index);
+        char *_Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
 
-    }
-
-    // Assign null at the last of allocated memory.
-
-    *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
-
-    // Now convert the two (1st is from the File, 2st is form the User-new-option) fetched serial number from character to integer value.
-
-    int _quantity_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
-    free(_Address_of_The_Allocated_Block_1);
-    // Removing the user instructed menu.
-
-    _address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "r");
-    FILE *_address_Of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "r");
-    FILE *_address_Of_The_Temporary_MENU_File = fopen("MENU/TEMPORARY_MENU.txt", "w");
-    FILE *_address_Of_The_Temporary_PATH_File = fopen("MENU/PATH/TEMPORARY_PATH.txt", "w");
-
-    for(int _where_Will_Skip = 1; _where_Will_Skip <= _quantity_Of_The_Menu; _where_Will_Skip++)
-    {
-
-        fscanf(_address_Of_The_Menu_Dot_Txt, "%s", _to_Store_Menu_Diffrent_Operation);
-        fscanf(_address_Of_The_Path_Dot_Txt, "%s", _to_Store_Path_Deletion_Time);
-
-        if (_where_Will_Skip != _user_Selected_Result)
+        for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
         {
 
-            fprintf(_address_Of_The_Temporary_MENU_File, "\n%s", _to_Store_Menu_Diffrent_Operation);
-            fprintf(_address_Of_The_Temporary_PATH_File, "\n%s", _to_Store_Path_Deletion_Time);
+            *(_Address_of_The_Allocated_Block_1 + _index) = *(_to_Store_Menu_Diffrent_Operation + _index);
 
         }
 
+        // Assign null at the last of allocated memory.
+
+        *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
+
+        // Now convert the two (1st is from the File, 2st is form the User-new-option) fetched serial number from character to integer value.
+
+        int _quantity_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
+        free(_Address_of_The_Allocated_Block_1);
+        // Removing the user instructed menu.
+
+        _address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "r");
+        FILE *_address_Of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "r");
+        FILE *_address_Of_The_Temporary_MENU_File = fopen("MENU/TEMPORARY_MENU.txt", "w");
+        FILE *_address_Of_The_Temporary_PATH_File = fopen("MENU/PATH/TEMPORARY_PATH.txt", "w");
+
+        for(int _where_Will_Skip = 1; _where_Will_Skip <= _quantity_Of_The_Menu; _where_Will_Skip++)
+        {
+
+            fscanf(_address_Of_The_Menu_Dot_Txt, "%s", _to_Store_Menu_Diffrent_Operation);
+            fscanf(_address_Of_The_Path_Dot_Txt, "%s", _to_Store_Path_Deletion_Time);
+
+            if (_where_Will_Skip != _user_Selected_Result)
+            {
+
+                fprintf(_address_Of_The_Temporary_MENU_File, "\n%s", _to_Store_Menu_Diffrent_Operation);
+                fprintf(_address_Of_The_Temporary_PATH_File, "\n%s", _to_Store_Path_Deletion_Time);
+
+            }
+
+        }
+
+        fclose(_address_Of_The_Menu_Dot_Txt);
+        fclose(_address_Of_The_Path_Dot_Txt);
+        fclose(_address_Of_The_Temporary_MENU_File);
+        fclose(_address_Of_The_Temporary_PATH_File);
+
+        remove("MENU/MENU.txt");
+        remove("MENU/PATH/PATH.txt");
+        rename("MENU/TEMPORARY_MENU.txt", "MENU/MENU.txt");
+        rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
+
+        _serial_Number_Fixer();
+
     }
+    else
+    {
 
-    fclose(_address_Of_The_Menu_Dot_Txt);
-    fclose(_address_Of_The_Path_Dot_Txt);
-    fclose(_address_Of_The_Temporary_MENU_File);
-    fclose(_address_Of_The_Temporary_PATH_File);
+        // If user don't want to delete menu by mistake may the user came to the delete menu then user may go to the previous menu.
 
-    remove("MENU/MENU.txt");
-    remove("MENU/PATH/PATH.txt");
-    rename("MENU/TEMPORARY_MENU.txt", "MENU/MENU.txt");
-    rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
+        _menu();
+        return 0;
 
-    _serial_Number_Fixer();
+    }
+    
 
 }
 
