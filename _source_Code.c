@@ -29,13 +29,14 @@ int _delete_Menu(void);
 int main(void)
 {
 
-    _delete_Menu();
+    char _user_Choice;
 
-    // if (_registration_Menu() == true)
-    // {
+    if (_registration_Menu() == true)
+    {
 
-    //     printf("DONE");
-    // }
+        _menu();
+
+    }
 
     // getch();
     return 0;
@@ -1158,8 +1159,10 @@ int _menu(void){
 
     char _store_Option[101];
     int _choice_Of_The_User;
+    char _user_Choice;
+    int _return_Values;
 
-    for(int _update_Y_Axis = 1 ;!feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis += 1){
+    for(int _update_Y_Axis = 1 ; !feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis += 1){
 
         fscanf(_address_Of_The_Menu_Dot_Txt, "%s", &_store_Option);
 
@@ -1167,11 +1170,122 @@ int _menu(void){
         printf("%s", _store_Option);
 
     }
-    gotoxy(32, 27);
-    printf("PRESS \'D\' FOR DELETE OPTION WITH ALL THE RECORDS OF THE PARTICULAR OPTION, AND \'A\' FOR ADD A NEW OPTION.");
+    fclose(_address_Of_The_Menu_Dot_Txt);
 
-    getch();
-    _add_More_Option();
+    int _find_Bracket_File;
+
+    for (_find_Bracket_File = 1; *(_store_Option + _find_Bracket_File) != ')'; _find_Bracket_File++);
+
+    char *_Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
+
+    for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
+    {
+
+        *(_Address_of_The_Allocated_Block_1 + _index) = *(_store_Option + _index);
+
+    }
+
+    // Assign null at the last of allocated memory.
+
+    *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
+
+    // Now convert the two (1st is from the File, 2'st is form the User-new-option) fetched serial number from character to integer value.
+
+    int _highest_Serial_Number_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
+    free(_Address_of_The_Allocated_Block_1);
+
+    gotoxy(32, 26);
+    printf("PRESS \'D\' FOR DELETE OPTION WITH ALL THE RECORDS OF THE PARTICULAR OPTION, AND \'A\' FOR");
+    gotoxy(32,27);
+    printf("ADD A NEW OPTION.");
+
+    gotoxy(32, 24);
+    printf("ENTER THE SERIAL NUMBER OR (D/A) OF YOUR NEEDFULL CHOICE:");
+    fflush(stdin);
+    _choice_Of_The_User = getch();
+
+    if ((_choice_Of_The_User <= _highest_Serial_Number_Of_The_Menu && _choice_Of_The_User > 0) || (_choice_Of_The_User == 68 || _choice_Of_The_User == 100) || (_choice_Of_The_User == 65 || _choice_Of_The_User == 97))
+    {
+        // Let the highest menu is 8, Menu must be lie between the range of less then equal to _highest_Serial_Number_Of_The_Menu and grater then 0.
+
+        // 68 == D and 100 == d through of ASCII.
+        if(_choice_Of_The_User == 68 || _choice_Of_The_User == 100){
+
+            // If user selected to delete option then control will come here.
+
+            _return_Values = _delete_Menu();
+            gotoxy(32, 26);
+            if(_return_Values != -1)
+                printf("DELETE SUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
+            else
+                printf("DELETE UNSUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
+
+            fflush(stdin);
+
+            scanf("%c", &_user_Choice);
+
+            if(_user_Choice == 'P' || _user_Choice == 'p')
+            {
+
+                _menu();
+
+            }
+            else
+            {
+
+                exit(1);
+
+            }
+
+
+        }
+        // 65 == A and 97 == a through of ASCII.
+        else if(_choice_Of_The_User == 65 || _choice_Of_The_User == 97)
+        {
+
+            // If user selected to Add-More+ option then control will come here.
+
+
+
+        }
+        else{
+
+            // If user selected any menu then the control will come here.
+
+        }
+
+
+
+    }
+    else
+    {
+
+        gotoxy(32, 25);
+        _red();
+        printf("YOU ENTERED A WRONG CHOICE, TO TRY AGAIN PRESS T, TO EXIT PRESS E.");
+        _choice_Of_The_User = getch();
+
+
+        if(_choice_Of_The_User == 84 || _choice_Of_The_User == 116)
+        {
+
+            _reset();
+            _menu();
+
+        }else
+        {
+
+            exit(1);
+
+        }
+
+
+    }
+
+
+
+
+
 
 }
 
@@ -1323,7 +1437,6 @@ int _delete_Menu(void){
 
     int _quantity_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
     free(_Address_of_The_Allocated_Block_1);
-
     // Removing the user instructed menu.
 
     _address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "r");
@@ -1366,9 +1479,9 @@ int _delete_Menu(void){
 void _serial_Number_Fixer(void){
 
     FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "r");
-    FILE *_address_Of_Temporary_File_One = fopen("MENU/TEMPORARY_MENU.txt", "a+");
+    FILE *_address_Of_Temporary_File_One = fopen("MENU/TEMPORARY_MENU.txt", "w");
     FILE *_address_Of_The_Menu_Path_Txt = fopen("MENU/PATH/PATH.txt", "r");
-    FILE *_address_Of_Temporary_File_Two = fopen("MENU/PATH/TEMPORARY_PATH.txt", "a+");
+    FILE *_address_Of_Temporary_File_Two = fopen("MENU/PATH/TEMPORARY_PATH.txt", "w");
     char _store_Menu_And_Path_For_Operations[101];
     int _which_Item_Will_Be_Delete_In_Decreasing_Order;
     int _assign_Assigner;
