@@ -25,18 +25,19 @@ int _menu(void);
 void _add_More_Option();
 int _space_Remover(char *);
 int _delete_Menu(void);
+void _column_Maker(void);
 
 int main(void)
 {
 
     char _user_Choice;
 
-    if (_registration_Menu() == true)
-    {
+    //if (_registration_Menu() == true)
+    //{
 
         _menu();
 
-    }
+    //}
 
     // getch();
     return 0;
@@ -1245,7 +1246,20 @@ int _menu(void){
 
             // If user selected to Add-More+ option then control will come here.
 
+            _add_More_Option();
 
+            // To add columns in the new option.
+
+            // Heading
+
+            system("cls");
+            _border(28, 121);
+            gotoxy(43, 2);
+            printf("--WELCOME TO THE ADD NEW RECORD--");
+            gotoxy(32, 3);
+            printf("-----------------------------------------------------------");
+
+            _column_Maker();
 
         }
         else{
@@ -1306,7 +1320,7 @@ void _add_More_Option(){
 
     system("cls");
     _border(28, 121);
-    gotoxy(50, 2);
+    gotoxy(46, 2);
     printf("--WELCOME TO THE NEW MENU--");
     gotoxy(32, 3);
     printf("-----------------------------------------------------------");
@@ -1356,14 +1370,15 @@ void _add_More_Option(){
 
     // Add the new menu to the MENU.txt file
 
-    fprintf(_address_Of_The_Menu_Dot_Txt, "\n\n%d)%s.", _recomendate_Serial_Number, _which_Menu_Will_Creat_By_The_User);
+    fprintf(_address_Of_The_Menu_Dot_Txt, "\n%d)%s.", _recomendate_Serial_Number, _which_Menu_Will_Creat_By_The_User);
+    fclose(_address_Of_The_Menu_Dot_Txt);
 
     // Add the path of the new menu create by the user on the PATH.txt file.
 
     FILE *_address_Of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "a+");
     fprintf(_address_Of_The_Path_Dot_Txt, "\n%d)MENU/%s.txt", _recomendate_Serial_Number, _which_Menu_Will_Creat_By_The_User);
 
-
+    fclose(_address_Of_The_Path_Dot_Txt);
 }
 
 // Delete menu function.
@@ -1416,7 +1431,7 @@ int _delete_Menu(void){
     fflush(stdin);
     scanf("%d", &_user_Selected_Result);
 
-    // P == 80 and p == 112 
+    // P == 80 and p == 112
 
     if(_user_Selected_Result != 'P' || _user_Selected_Result != 'p'){
 
@@ -1478,6 +1493,8 @@ int _delete_Menu(void){
 
         _serial_Number_Fixer();
 
+        return 89;
+
     }
     else
     {
@@ -1488,7 +1505,7 @@ int _delete_Menu(void){
         return 0;
 
     }
-    
+
 
 }
 
@@ -1590,5 +1607,90 @@ void _serial_Number_Fixer(void){
     fclose(_address_Of_Temporary_File_Two);
     remove("MENU/PATH/PATH.txt");
     rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
+
+}
+
+// Column maker
+
+void _column_Maker(void){
+
+    char _store_Menu_And_Path_For_Operations[30];
+    int _which_Item_Will_Be_Delete_In_Decreasing_Order;
+    int _assign_Assigner;
+    int _total_Length_Of_Each_Menu;
+
+    FILE *_address_of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "a+");
+
+    while(!feof(_address_of_The_Path_Dot_Txt))
+        fscanf(_address_of_The_Path_Dot_Txt, "%s", _store_Menu_And_Path_For_Operations);
+
+    // Deletion the serial of the path.
+
+    for (_which_Item_Will_Be_Delete_In_Decreasing_Order = 1; *(_store_Menu_And_Path_For_Operations + _which_Item_Will_Be_Delete_In_Decreasing_Order) != ')'; _which_Item_Will_Be_Delete_In_Decreasing_Order++);
+
+
+    for (; _which_Item_Will_Be_Delete_In_Decreasing_Order != -1; _which_Item_Will_Be_Delete_In_Decreasing_Order--)
+    {
+
+        _assign_Assigner = _which_Item_Will_Be_Delete_In_Decreasing_Order;
+        _total_Length_Of_Each_Menu = strlen(_store_Menu_And_Path_For_Operations);
+        _total_Length_Of_Each_Menu--;
+
+        for(; _assign_Assigner <= (_total_Length_Of_Each_Menu - 1); _assign_Assigner++)
+        {
+
+            _store_Menu_And_Path_For_Operations[_assign_Assigner] = _store_Menu_And_Path_For_Operations[_assign_Assigner + 1];
+
+        }
+
+        _store_Menu_And_Path_For_Operations[_assign_Assigner] = '\0';
+
+    }
+
+    // Now have the actual file path.
+
+    FILE *_new_Menu = fopen(_store_Menu_And_Path_For_Operations, "a+");
+
+    int _how_Many_Column;
+    int _update_Y_Axis = 2;
+    char _column_Name[15];
+    int _which_Column_Indicator = 1;
+    int _maximum_Size_Of_The_Each_Column;
+
+    gotoxy(32, 5);
+    printf("ENTER HOW MANY COLUMN YOU WANT TO ADD TO THE NEW OPTION:");
+    fflush(stdin);
+    scanf("%d", &_how_Many_Column);
+
+    // Allocating interger type memory to store the maximum size of character each of the column. 
+
+    while(_how_Many_Column != 0)
+    {
+
+        // Taking the column name.
+
+        gotoxy(32, 5 + _update_Y_Axis);
+        printf("ENTER YOUR %dST COLUMN NAME [MAXIMUM SIZE 15]:", _which_Column_Indicator);
+        fflush(stdin);
+        gets(_column_Name);
+
+        // Taking the column size.
+
+        _update_Y_Axis ++;
+        gotoxy(32, 5 + _update_Y_Axis);
+        printf("ENTER YOUR %dST COLUMN'S SIZE [MAXIMUM SIZE 15]:", _which_Column_Indicator);
+        fflush(stdin);
+        scanf("%d", &_maximum_Size_Of_The_Each_Column);
+        if(_maximum_Size_Of_The_Each_Column > 15)
+            _maximum_Size_Of_The_Each_Column = 15;
+
+        fprintf(_new_Menu, "%s(%d),", _column_Name, _maximum_Size_Of_The_Each_Column);
+
+        _how_Many_Column--;
+        _update_Y_Axis += 2;
+        _which_Column_Indicator++;
+
+    }
+
 
 }
