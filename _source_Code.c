@@ -1458,6 +1458,7 @@ int _delete_Menu(void){
 
         int _quantity_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
         free(_Address_of_The_Allocated_Block_1);
+
         // Removing the user instructed menu.
 
         _address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "r");
@@ -1477,7 +1478,38 @@ int _delete_Menu(void){
                 fprintf(_address_Of_The_Temporary_MENU_File, "\n%s", _to_Store_Menu_Diffrent_Operation);
                 fprintf(_address_Of_The_Temporary_PATH_File, "\n%s", _to_Store_Path_Deletion_Time);
 
+            }else
+            {
+                
+                // When the control will be come here, Which mean this path will not be write on the file, That mean help of this path I want to delete this file.
+
+                int _which_Item_Will_Be_Delete_In_Decreasing_Order;
+                int _assign_Assigner;
+                int _total_Length_Of_Each_Menu;
+
+                for (_which_Item_Will_Be_Delete_In_Decreasing_Order = 1; *(_to_Store_Path_Deletion_Time + _which_Item_Will_Be_Delete_In_Decreasing_Order) != ')'; _which_Item_Will_Be_Delete_In_Decreasing_Order++);
+
+                for (; _which_Item_Will_Be_Delete_In_Decreasing_Order != -1; _which_Item_Will_Be_Delete_In_Decreasing_Order--)
+                {
+
+                    _assign_Assigner = _which_Item_Will_Be_Delete_In_Decreasing_Order;
+                    _total_Length_Of_Each_Menu = strlen(_to_Store_Path_Deletion_Time);
+                    _total_Length_Of_Each_Menu--;
+
+                    for(; _assign_Assigner <= (_total_Length_Of_Each_Menu - 1); _assign_Assigner++)
+                    {
+
+                        _to_Store_Path_Deletion_Time[_assign_Assigner] = _to_Store_Path_Deletion_Time[_assign_Assigner + 1];
+
+                    }
+
+                    _to_Store_Path_Deletion_Time[_assign_Assigner] = '\0';
+
+                }
+
+
             }
+            
 
         }
 
@@ -1488,10 +1520,17 @@ int _delete_Menu(void){
 
         remove("MENU/MENU.txt");
         remove("MENU/PATH/PATH.txt");
+        remove(_to_Store_Path_Deletion_Time);
         rename("MENU/TEMPORARY_MENU.txt", "MENU/MENU.txt");
         rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
 
+         
+
         _serial_Number_Fixer();
+
+        // Deleting the file which contain this particular option data.
+
+
 
         return 89;
 
