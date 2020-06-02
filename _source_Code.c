@@ -1253,12 +1253,10 @@ int _menu(void){
             // Heading
 
             system("cls");
-            _border(28, 121);
             gotoxy(43, 2);
             printf("--WELCOME TO THE ADD NEW RECORD--");
             gotoxy(32, 3);
             printf("-----------------------------------------------------------");
-
             _column_Maker();
 
         }
@@ -1507,6 +1505,8 @@ int _delete_Menu(void){
 
                 }
 
+                // Deleting the file which contain this particular option data.
+                remove(_to_Store_Path_Deletion_Time);
 
             }
             
@@ -1520,17 +1520,10 @@ int _delete_Menu(void){
 
         remove("MENU/MENU.txt");
         remove("MENU/PATH/PATH.txt");
-        remove(_to_Store_Path_Deletion_Time);
         rename("MENU/TEMPORARY_MENU.txt", "MENU/MENU.txt");
         rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
 
-         
-
         _serial_Number_Fixer();
-
-        // Deleting the file which contain this particular option data.
-
-
 
         return 89;
 
@@ -1731,5 +1724,8 @@ void _column_Maker(void){
 
     }
 
+    gotoxy(32, 7 + _update_Y_Axis);
+    printf("ALL THE COLUMNS ADDED SUCCESSFULLY, PRESS ANY KEY YOU WILL REDIRECT TO THE MAIN MENU");
+    getch();
 
 }
