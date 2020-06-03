@@ -1924,4 +1924,30 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
 
     *(_store_Each_Column_Name + _index_For_Assign) = '\0';
 
+    /*
+    
+    NOW,Finding the highest number from the limitation, When will take record from the user will store the record here
+    temporary, EX: If the highest limition 8 under 8 limition will come all the column's value.
+    
+    */
+
+    // Finding the highest number.
+
+    int _store_The_Highest_Number = *_limition_Of_Each_Column;
+
+    for(int _index = 1; _index < _how_Many_Column; _index++)
+    {
+
+        if (*(_limition_Of_Each_Column + _index) > _store_The_Highest_Number)
+        {
+            
+            _store_The_Highest_Number = *(_limition_Of_Each_Column + _index);
+
+        }
+        
+
+    }
+
+    char _will_Store_All_The_Record_Temporary = (int*) malloc(sizeof(int) * _store_The_Highest_Number);
+
 }
