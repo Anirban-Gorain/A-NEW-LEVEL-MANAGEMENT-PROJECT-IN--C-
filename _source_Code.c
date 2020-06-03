@@ -1159,8 +1159,9 @@ int _menu(void){
     FILE *_address_Of_The_Menu_Dot_Txt = fopen("MENU/MENU.txt", "a+");
 
     char _store_Option[101];
-    int _choice_Of_The_User;
+    char _choice_Of_The_User[5];
     char _user_Choice;
+    int _serial_Number;
     int _return_Values;
 
     for(int _update_Y_Axis = 1 ; !feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis += 1){
@@ -1203,14 +1204,23 @@ int _menu(void){
     gotoxy(32, 24);
     printf("ENTER THE SERIAL NUMBER OR (D/A) OF YOUR NEEDFULL CHOICE:");
     fflush(stdin);
-    _choice_Of_The_User = getch();
-
-    if ((_choice_Of_The_User <= _highest_Serial_Number_Of_The_Menu && _choice_Of_The_User > 0) || (_choice_Of_The_User == 68 || _choice_Of_The_User == 100) || (_choice_Of_The_User == 65 || _choice_Of_The_User == 97))
+    gets(_choice_Of_The_User);
+    
+    if(strlen(_choice_Of_The_User) > 1)
     {
+
+        _serial_Number = atoi(_choice_Of_The_User);
+
+    }
+
+    if ((_serial_Number  <= _highest_Serial_Number_Of_The_Menu && _serial_Number > 0) || (*_choice_Of_The_User == 68 || *_choice_Of_The_User == 100) || (*_choice_Of_The_User == 65 || *_choice_Of_The_User == 97))
+    {
+
         // Let the highest menu is 8, Menu must be lie between the range of less then equal to _highest_Serial_Number_Of_The_Menu and grater then 0.
 
         // 68 == D and 100 == d through of ASCII.
-        if(_choice_Of_The_User == 68 || _choice_Of_The_User == 100){
+
+        if(*_choice_Of_The_User == 68 || *_choice_Of_The_User == 100){
 
             // If user selected to delete option then control will come here.
 
@@ -1241,7 +1251,7 @@ int _menu(void){
 
         }
         // 65 == A and 97 == a through of ASCII.
-        else if(_choice_Of_The_User == 65 || _choice_Of_The_User == 97)
+        else if(*_choice_Of_The_User == 65 || *_choice_Of_The_User == 97)
         {
 
             // If user selected to Add-More+ option then control will come here.
@@ -1264,6 +1274,8 @@ int _menu(void){
 
             // If user selected any menu then the control will come here.
 
+            _menu();
+
         }
 
 
@@ -1275,10 +1287,10 @@ int _menu(void){
         gotoxy(32, 25);
         _red();
         printf("YOU ENTERED A WRONG CHOICE, TO TRY AGAIN PRESS T, TO EXIT PRESS E.");
-        _choice_Of_The_User = getch();
+        scanf("%c", _choice_Of_The_User);
 
 
-        if(_choice_Of_The_User == 84 || _choice_Of_The_User == 116)
+        if(*_choice_Of_The_User == 84 || *_choice_Of_The_User == 116)
         {
 
             _reset();
@@ -1687,7 +1699,7 @@ void _column_Maker(void){
     int _update_Y_Axis = 2;
     char _column_Name[15];
     int _which_Column_Indicator = 1;
-    int _maximum_Size_Of_The_Each_Column;
+    int _maximum_Size_Of_The_Each_Column = 0;
 
     gotoxy(32, 5);
     printf("ENTER HOW MANY COLUMN YOU WANT TO ADD TO THE NEW OPTION:");
@@ -1727,5 +1739,13 @@ void _column_Maker(void){
     gotoxy(32, 7 + _update_Y_Axis);
     printf("ALL THE COLUMNS ADDED SUCCESSFULLY, PRESS ANY KEY YOU WILL REDIRECT TO THE MAIN MENU");
     getch();
+
+}
+
+// Memory allocater for store record.
+
+void _memory_Allocater(void){
+
+
 
 }
