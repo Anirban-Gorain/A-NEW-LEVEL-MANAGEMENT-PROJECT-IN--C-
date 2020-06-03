@@ -1206,7 +1206,7 @@ int _menu(void){
     fflush(stdin);
     gets(_choice_Of_The_User);
     
-    if(strlen(_choice_Of_The_User) > 1)
+    if(*_choice_Of_The_User >= 48 && *_choice_Of_The_User <= 57)
     {
 
         _serial_Number = atoi(_choice_Of_The_User);
