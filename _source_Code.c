@@ -1784,6 +1784,7 @@ void _column_Maker(void){
         if(_maximum_Size_Of_The_Each_Column > 15)
             _maximum_Size_Of_The_Each_Column = 15;
 
+        _space_Remover(_column_Name);
         fprintf(_new_Menu, "%s(%d),", _column_Name, _maximum_Size_Of_The_Each_Column);
 
         _how_Many_Column--;
