@@ -26,6 +26,7 @@ void _add_More_Option();
 int _space_Remover(char *);
 int _delete_Menu(void);
 void _column_Maker(void);
+void _memory_Allocater(char *);
 
 int main(void)
 {
@@ -1274,6 +1275,61 @@ int _menu(void){
 
             // If user selected any menu then the control will come here.
 
+            // NOW, Finding the path which record user want to open.
+
+            char _store_Path[20];
+            FILE *_address_Of_The_Path_Dot_Txt = fopen("MENU/PATH/PATH.txt", "r");
+
+            for (int _where_Pick_Up_The_path = 1; !feof(_address_Of_The_Path_Dot_Txt); _where_Pick_Up_The_path++)
+            {
+                
+                
+                if(_where_Pick_Up_The_path == _serial_Number)
+                {
+
+                    fscanf(_address_Of_The_Path_Dot_Txt, "%s", _store_Path);
+
+                    // NOW, Got the reqired path, Just want to remove the serial number from the path.
+
+                    int _which_Item_Will_Be_Delete_In_Decreasing_Order;
+                    int _assign_Assigner;
+                    int _total_Length_Of_Each_Menu;
+
+                    for (_which_Item_Will_Be_Delete_In_Decreasing_Order = 1; *(_store_Path + _which_Item_Will_Be_Delete_In_Decreasing_Order) != ')'; _which_Item_Will_Be_Delete_In_Decreasing_Order++);
+
+                    for (; _which_Item_Will_Be_Delete_In_Decreasing_Order != -1; _which_Item_Will_Be_Delete_In_Decreasing_Order--)
+                    {
+
+                        _assign_Assigner = _which_Item_Will_Be_Delete_In_Decreasing_Order;
+                        _total_Length_Of_Each_Menu = strlen(_store_Path);
+                        _total_Length_Of_Each_Menu--;
+
+                        for(; _assign_Assigner <= (_total_Length_Of_Each_Menu - 1); _assign_Assigner++)
+                        {
+
+                            _store_Path[_assign_Assigner] = _store_Path[_assign_Assigner + 1];
+
+                        }
+
+                        _store_Path[_assign_Assigner] = '\0';
+
+                    }
+                    fclose(_address_Of_The_Path_Dot_Txt);
+                    break;
+
+                }
+
+                fscanf(_address_Of_The_Path_Dot_Txt, "%s", _store_Path);
+
+            }
+            
+            // NOW, have complete usable path.
+
+            // Sending the actual path of the which option the user selected, And the memory allocater work will be, Seprate and store the limition of each column, Seprate the name of the each column and store it, etc.
+
+            _memory_Allocater(_store_Path);
+
+            getch();
             _menu();
 
         }
@@ -1744,8 +1800,127 @@ void _column_Maker(void){
 
 // Memory allocater for store record.
 
-void _memory_Allocater(void){
+void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
+
+    FILE *_address_Of_The_User_Required_File = fopen(_addres_Of_Where_Stored_The_Path_Of, "a+"); 
+
+    char _store_the_First_Line_Of_User_Reqired_File[200];
+
+    // Taking the first line which line contain all the information like  How many COLUMN, Maximum size of the each column also name of the each column, Of a particualar option.
+
+    fscanf(_address_Of_The_User_Required_File, "%s", _store_the_First_Line_Of_User_Reqired_File);
+
+    // Now, having the raw data which contain all the data which are topward commented mentioned item.
+ 
+    // Finding how many column have, Simple approach each column seprated by the ',' just counting how many ',' contain the total raw data. 
+
+    int _how_Many_Column = 0;
+    char _seprate_The_Store_Limition[2];
+    int *_limition_Of_Each_Column = (int*) malloc(0);
+    int _how_Many_Integer_Data_In_The_First_line = 0;
+
+    for(int _index = 0, _index_For_Allocated_Memory = 0; _store_the_First_Line_Of_User_Reqired_File[_index] != '\0'; _index++){
+
+        if (_store_the_First_Line_Of_User_Reqired_File[_index] == '(')
+        {
+            // _seprate_The_Store_Limition MEAN limition character of each column.
+
+            _seprate_The_Store_Limition[0] = _store_the_First_Line_Of_User_Reqired_File[_index + 1];
+            _seprate_The_Store_Limition[1] = _store_the_First_Line_Of_User_Reqired_File[_index + 2];
+
+            if(_store_the_First_Line_Of_User_Reqired_File[_index + 1] >= 48 && _store_the_First_Line_Of_User_Reqired_File[_index + 1] <= 57)
+            {
+
+                _how_Many_Integer_Data_In_The_First_line++;
+
+            }
+            
+            if(_store_the_First_Line_Of_User_Reqired_File[_index + 2] >= 48 && _store_the_First_Line_Of_User_Reqired_File[_index + 2] <= 57)
+            {
+
+                _how_Many_Integer_Data_In_The_First_line++;
+
+            }
+
+        }
+        
+
+        if(_store_the_First_Line_Of_User_Reqired_File[_index] == ',')
+        {
+
+            _how_Many_Column++;
+            realloc(_limition_Of_Each_Column, sizeof(int) * _how_Many_Column);
+            *(_limition_Of_Each_Column + _index_For_Allocated_Memory) = atoi(_seprate_The_Store_Limition);
+            _index_For_Allocated_Memory++;
+
+        }
+        
+
+    }
+    
+    // Now calculating how many blocks required to store All the column name sparated by any NULL character.
+
+    /*
+
+        (_how_Many_Column * 2) = Total brackets.
+        _how_Many_Integer_Data_In_The_First_line = All the limition characters.
+        _how_Many_Column = All the comma.
+        (_how_Many_Column - 1) = Required spacess to seprate the columns name.
+    
+    */
+
+    int _Calculating_Size_To_Store_Column = (strlen(_store_the_First_Line_Of_User_Reqired_File) - (_how_Many_Column * 2) - _how_Many_Integer_Data_In_The_First_line - _how_Many_Column) + (_how_Many_Column - 1);
+
+    char *_store_Each_Column_Name = (char*) malloc(sizeof(char) * (_Calculating_Size_To_Store_Column));
+
+    // Seprating the column name from the first line which mean the raw data.
+    
+    int _index_For_Assign = 0;
+
+    for(int _index_For_Traves_The_Raw_Data = 0, _index_Jumper = 0; _store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data] != '\0'; _index_For_Traves_The_Raw_Data++, _index_For_Assign++)
+    {
+
+        if(_store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data] == '(')
+        {
+
+            if(*(_limition_Of_Each_Column + _index_Jumper) / 2 > 4)
+            {
+
+                *(_store_Each_Column_Name + _index_For_Assign) = ' ';
+                _index_Jumper++;
+                _index_For_Traves_The_Raw_Data += 4;
+                if(_store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data + 1] == '\0')
+                {
+
+                    break;
+
+                }
+                continue;
+
+            }else
+            {
+                
+                *(_store_Each_Column_Name + _index_For_Assign) = ' ';
+                _index_Jumper++;
+                _index_For_Traves_The_Raw_Data += 3;
+                if(_store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data + 1] == '\0')
+                {
+
+                    break;
+
+                }
+                continue;
+
+            }
+            
+
+        }
+
+        *(_store_Each_Column_Name + _index_For_Assign) = _store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data];
 
 
+    }
+
+    *(_store_Each_Column_Name + _index_For_Assign) = '\0';
 
 }
