@@ -27,6 +27,7 @@ int _space_Remover(char *);
 int _delete_Menu(void);
 void _column_Maker(void);
 void _memory_Allocater(char *);
+void _record_Inserter(int , int *, char *, char *, char *);
 
 int main(void)
 {
@@ -1206,7 +1207,7 @@ int _menu(void){
     printf("ENTER THE SERIAL NUMBER OR (D/A) OF YOUR NEEDFULL CHOICE:");
     fflush(stdin);
     gets(_choice_Of_The_User);
-    
+
     if(*_choice_Of_The_User >= 48 && *_choice_Of_The_User <= 57)
     {
 
@@ -1282,8 +1283,8 @@ int _menu(void){
 
             for (int _where_Pick_Up_The_path = 1; !feof(_address_Of_The_Path_Dot_Txt); _where_Pick_Up_The_path++)
             {
-                
-                
+
+
                 if(_where_Pick_Up_The_path == _serial_Number)
                 {
 
@@ -1322,7 +1323,7 @@ int _menu(void){
                 fscanf(_address_Of_The_Path_Dot_Txt, "%s", _store_Path);
 
             }
-            
+
             // NOW, have complete usable path.
 
             // Sending the actual path of the which option the user selected, And the memory allocater work will be, Seprate and store the limition of each column, Seprate the name of the each column and store it, etc.
@@ -1546,7 +1547,7 @@ int _delete_Menu(void){
 
             }else
             {
-                
+
                 // When the control will be come here, Which mean this path will not be write on the file, That mean help of this path I want to delete this file.
 
                 int _which_Item_Will_Be_Delete_In_Decreasing_Order;
@@ -1577,7 +1578,7 @@ int _delete_Menu(void){
                 remove(_to_Store_Path_Deletion_Time);
 
             }
-            
+
 
         }
 
@@ -1762,7 +1763,7 @@ void _column_Maker(void){
     fflush(stdin);
     scanf("%d", &_how_Many_Column);
 
-    // Allocating interger type memory to store the maximum size of character each of the column. 
+    // Allocating interger type memory to store the maximum size of character each of the column.
 
     while(_how_Many_Column != 0)
     {
@@ -1801,9 +1802,9 @@ void _column_Maker(void){
 
 // Memory allocater for store record.
 
-void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
+void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option){
 
-    FILE *_address_Of_The_User_Required_File = fopen(_addres_Of_Where_Stored_The_Path_Of, "a+"); 
+    FILE *_address_Of_The_User_Required_File = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "a+");
 
     char _store_the_First_Line_Of_User_Reqired_File[200];
 
@@ -1812,8 +1813,8 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
     fscanf(_address_Of_The_User_Required_File, "%s", _store_the_First_Line_Of_User_Reqired_File);
 
     // Now, having the raw data which contain all the data which are topward commented mentioned item.
- 
-    // Finding how many column have, Simple approach each column seprated by the ',' just counting how many ',' contain the total raw data. 
+
+    // Finding how many column have, Simple approach each column seprated by the ',' just counting how many ',' contain the total raw data.
 
     int _how_Many_Column = 0;
     char _seprate_The_Store_Limition[2];
@@ -1824,7 +1825,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
 
         if (_store_the_First_Line_Of_User_Reqired_File[_index] == '(')
         {
-            // _seprate_The_Store_Limition MEAN limition character of each column.
+            // _seprate_The_Store_Limition MEAN limitation character of each column.
 
             _seprate_The_Store_Limition[0] = _store_the_First_Line_Of_User_Reqired_File[_index + 1];
             _seprate_The_Store_Limition[1] = _store_the_First_Line_Of_User_Reqired_File[_index + 2];
@@ -1835,7 +1836,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
                 _how_Many_Integer_Data_In_The_First_line++;
 
             }
-            
+
             if(_store_the_First_Line_Of_User_Reqired_File[_index + 2] >= 48 && _store_the_First_Line_Of_User_Reqired_File[_index + 2] <= 57)
             {
 
@@ -1844,7 +1845,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
             }
 
         }
-        
+
 
         if(_store_the_First_Line_Of_User_Reqired_File[_index] == ',')
         {
@@ -1855,10 +1856,10 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
             _index_For_Allocated_Memory++;
 
         }
-        
+
 
     }
-    
+
     // Now calculating how many blocks required to store All the column name sparated by any NULL character.
 
     /*
@@ -1867,7 +1868,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
         _how_Many_Integer_Data_In_The_First_line = All the limition characters.
         _how_Many_Column = All the comma.
         (_how_Many_Column - 1) = Required spacess to seprate the columns name.
-    
+
     */
 
     int _Calculating_Size_To_Store_Column = (strlen(_store_the_First_Line_Of_User_Reqired_File) - (_how_Many_Column * 2) - _how_Many_Integer_Data_In_The_First_line - _how_Many_Column) + (_how_Many_Column - 1);
@@ -1875,7 +1876,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
     char *_store_Each_Column_Name = (char*) malloc(sizeof(char) * (_Calculating_Size_To_Store_Column));
 
     // Seprating the column name from the first line which mean the raw data.
-    
+
     int _index_For_Assign = 0;
 
     for(int _index_For_Traves_The_Raw_Data = 0, _index_Jumper = 0; _store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data] != '\0'; _index_For_Traves_The_Raw_Data++, _index_For_Assign++)
@@ -1887,7 +1888,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
             if(*(_limition_Of_Each_Column + _index_Jumper) / 2 > 4)
             {
 
-                *(_store_Each_Column_Name + _index_For_Assign) = ' ';
+                *(_store_Each_Column_Name + _index_For_Assign) = '\0';
                 _index_Jumper++;
                 _index_For_Traves_The_Raw_Data += 4;
                 if(_store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data + 1] == '\0')
@@ -1900,8 +1901,8 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
 
             }else
             {
-                
-                *(_store_Each_Column_Name + _index_For_Assign) = ' ';
+
+                *(_store_Each_Column_Name + _index_For_Assign) = '\0';
                 _index_Jumper++;
                 _index_For_Traves_The_Raw_Data += 3;
                 if(_store_the_First_Line_Of_User_Reqired_File[_index_For_Traves_The_Raw_Data + 1] == '\0')
@@ -1913,7 +1914,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
                 continue;
 
             }
-            
+
 
         }
 
@@ -1925,10 +1926,10 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
     *(_store_Each_Column_Name + _index_For_Assign) = '\0';
 
     /*
-    
+
     NOW,Finding the highest number from the limitation, When will take record from the user will store the record here
     temporary, EX: If the highest limition 8 under 8 limition will come all the column's value.
-    
+
     */
 
     // Finding the highest number.
@@ -1940,14 +1941,48 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of){
 
         if (*(_limition_Of_Each_Column + _index) > _store_The_Highest_Number)
         {
-            
+
             _store_The_Highest_Number = *(_limition_Of_Each_Column + _index);
 
         }
-        
+
 
     }
 
-    char _will_Store_All_The_Record_Temporary = (int*) malloc(sizeof(int) * _store_The_Highest_Number);
+    char *_here_Will_Store_All_The_Record_Temporary = (char*) malloc(sizeof(char) * _store_The_Highest_Number);
+
+    _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
+
+}
+
+// Record insert function.
+
+void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char *_store_Each_Column_Name, char *_here_Will_Store_All_The_Record_Temporary, char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
+{
+
+    system("cls");
+    gotoxy(43, 2);
+    printf("--WELCOME TO THE ADD NEW RECORD--");
+    gotoxy(32, 3);
+    printf("-----------------------------------------------------------");
+
+    int _index_Healper = 0;
+    
+    // Opening file where will be store data.
+    FILE *_address_Of_Where_Will_Store_Data = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "a+");
+    fprintf(_address_Of_Where_Will_Store_Data, "\n");
+    for(int _index = 0; _how_Many_Column > _index; _index++)
+    {
+
+        gotoxy(32, 5 + _index);
+        printf("ENTER THE %s [MAXIMUM %d CHARACTERS IS ALLOWED]", _store_Each_Column_Name + _index_Healper, *(_limition_Of_Each_Column + _index));
+        fflush(stdin);
+        gets(_here_Will_Store_All_The_Record_Temporary);
+        fprintf(_address_Of_Where_Will_Store_Data, "%s-", _here_Will_Store_All_The_Record_Temporary);
+
+        _index_Healper += (strlen(_index_Healper + _store_Each_Column_Name) + 1);
+    }
+
+    fclose(_address_Of_Where_Will_Store_Data);
 
 }
