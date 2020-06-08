@@ -28,6 +28,8 @@ int _delete_Menu(void);
 void _column_Maker(void);
 void _memory_Allocater(char *);
 void _record_Inserter(int , int *, char *, char *, char *);
+void _printer(char *);
+void _yellow(void);
 
 int main(void)
 {
@@ -1328,7 +1330,8 @@ int _menu(void){
 
             // Sending the actual path of the which option the user selected, And the memory allocater work will be, Seprate and store the limition of each column, Seprate the name of the each column and store it, etc.
 
-            _memory_Allocater(_store_Path);
+            // _memory_Allocater(_store_Path);
+            _printer(_store_Path);
 
             getch();
             _menu();
@@ -1886,7 +1889,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Op
         {
 
             if(*(_limition_Of_Each_Column + _index_Jumper) / 2 > 4)
-            {
+            { 
 
                 *(_store_Each_Column_Name + _index_For_Assign) = '\0';
                 _index_Jumper++;
@@ -1953,6 +1956,10 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Op
 
     _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
 
+    free(_limition_Of_Each_Column);
+    free(_store_Each_Column_Name);
+    free(_here_Will_Store_All_The_Record_Temporary);
+    free(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
 }
 
 // Record insert function.
@@ -1984,5 +1991,384 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
     }
 
     fclose(_address_Of_Where_Will_Store_Data);
+
+}
+
+// Printer
+
+void _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
+{
+
+    system("cls");
+
+    FILE *_which_File_Have_To_Print = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "r");
+
+    char _store_File_To_Print[122] = {[0 ... 121] = '\0'};
+
+    // Checking file empty or not.
+
+    fseek(_which_File_Have_To_Print, 0, 2);
+    int _is_Empty = ftell(_which_File_Have_To_Print);
+
+    // Reopen the same file.
+
+    fclose(_which_File_Have_To_Print);
+    _which_File_Have_To_Print = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "r");
+
+    if(_is_Empty != 0)
+    {
+
+        // Commands.
+
+        printf("1)A FOR ADD A RECORD.\n2)D FOR DELETE A RECORD.\n3)C FOR ADD MORE COLUMN.\n4)R FOR REMOVE A COLUMN.\n5)S FOR SEARCH.\n6)U FOR UPDATE.\n7)B FOR BACK.\n8)M FOR THE MAIN MENU.\n");
+        
+        // This downward code will be print a line on the x axis.
+
+        for (int _line = 1; _line <= 122; _line++)
+        {
+            
+            printf("-");
+
+        }
+        
+        int _how_Many_Column = 0;
+        char _store_The_Fetched_Line_From_User_Reqired_File[200] = {[0 ... 119] = '\0'};
+
+        // Taking the first line which line contain all the information like  How many COLUMN, Maximum size of the each column also name of the each column, Of a particualar option.
+
+        fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+
+        // Finding the how many column existing.
+
+        for(int _index = 0; _store_The_Fetched_Line_From_User_Reqired_File[_index] != '\0'; _index++)
+        {
+
+            if(_store_The_Fetched_Line_From_User_Reqired_File[_index] == ',')
+            {
+
+                _how_Many_Column++;
+
+            }
+
+
+        }
+
+        /*
+        
+            Allocating memory crossepondig size to the _how_Many_Column, Let having 3 column allocate will be 3 integer blocks.
+
+            Purpose to allocate theese memory blocks?
+
+            Answer => To store the highest size of each column.
+
+            EXAMPLE:
+            => Let, Having 2 columns F.name(15), F.price(5) respectively.
+            
+                    F.name  F.price
+            row 1   Mango   12
+            row 2   Apple   122
+            row 3   Banana  50
+
+            Now imagine these are teh allocated 2 memory blocks => |String length of the 'Banana'|Price length of the 'Apple'|
+            
+
+        */
+
+        int *_address_Of_The_Allocated_Memory = (int*) malloc(sizeof(int) * _how_Many_Column);
+
+        // In the first line of required file deleting all the Numeric character and bracket also replace 
+
+        char _a_Copy_Of_First_Line[200];
+
+        strcpy(_a_Copy_Of_First_Line, _store_The_Fetched_Line_From_User_Reqired_File);
+
+        int _length_Of_The_First_Line  = strlen(_a_Copy_Of_First_Line);
+
+        // The downward code will delete all the numeric character and brackets.
+
+        for (int _traves_The_Total_Array = 0; _a_Copy_Of_First_Line[_traves_The_Total_Array] != '\0'; _traves_The_Total_Array++)
+        {
+            
+
+
+            if ((_a_Copy_Of_First_Line[_traves_The_Total_Array] >= 48 && _a_Copy_Of_First_Line[_traves_The_Total_Array] <= 57) || (_a_Copy_Of_First_Line[_traves_The_Total_Array] == '(') || (_a_Copy_Of_First_Line[_traves_The_Total_Array] == ')'))
+            {
+                _length_Of_The_First_Line--;
+                int _which_Element_Will_Be_Delete = _traves_The_Total_Array;
+
+                for(;_a_Copy_Of_First_Line[_which_Element_Will_Be_Delete + 1] != '\0'; _which_Element_Will_Be_Delete++)
+                {
+
+                    _a_Copy_Of_First_Line[_which_Element_Will_Be_Delete] = _a_Copy_Of_First_Line[_which_Element_Will_Be_Delete + 1];
+
+                }
+
+                _a_Copy_Of_First_Line[_which_Element_Will_Be_Delete] = '\0';
+                _traves_The_Total_Array--;
+
+            }
+            
+            if(_a_Copy_Of_First_Line[_traves_The_Total_Array] == ','){
+
+                _a_Copy_Of_First_Line[_traves_The_Total_Array] = '\0';
+
+            }
+
+        }
+
+        // On the allocated memory assigning the length of each column name's.
+
+        for(int _index_Jumper = 0, _index_For_Assign = 0; _index_Jumper < _length_Of_The_First_Line - 1; _index_For_Assign++)
+        {
+
+            *(_address_Of_The_Allocated_Memory + _index_For_Assign) = strlen(_a_Copy_Of_First_Line + _index_Jumper);
+            _index_Jumper += (strlen(_a_Copy_Of_First_Line  + _index_Jumper) + 1);
+
+        }
+
+        // Comparing.
+
+        // The down-ward exta 2 line of code because of want to open the record from the second line.
+
+        fseek(_which_File_Have_To_Print, 2, 0);
+        fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+
+        int _second_line_Length = strlen(_store_The_Fetched_Line_From_User_Reqired_File);
+
+        while(!feof(_which_File_Have_To_Print))
+        {
+            fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+
+            _second_line_Length = strlen(_store_The_Fetched_Line_From_User_Reqired_File);
+
+            // Replace the Conjugate-Character(~) by NULL, The conjugate seprated the each column vale in a row.
+
+            for(int _index = 0; _store_The_Fetched_Line_From_User_Reqired_File[_index] != '\0'; _index++)
+            {
+
+                if(_store_The_Fetched_Line_From_User_Reqired_File[_index] == '~')
+                {
+
+                    _store_The_Fetched_Line_From_User_Reqired_File[_index] = '\0';
+
+                }
+
+            }
+
+            for(int _index_Jumper = 0, _store_Value_To_Comapre, _index_To_Compare = 0; _index_Jumper < _second_line_Length - 1; _index_To_Compare++)
+            {
+
+                _store_Value_To_Comapre = strlen(_store_The_Fetched_Line_From_User_Reqired_File + _index_Jumper);
+
+                _index_Jumper += strlen(_store_The_Fetched_Line_From_User_Reqired_File + _index_Jumper) + 1;
+
+                if(_store_Value_To_Comapre > *(_address_Of_The_Allocated_Memory + _index_To_Compare))
+                {
+
+                   *(_address_Of_The_Allocated_Memory + _index_To_Compare) = _store_Value_To_Comapre;
+
+                }
+
+            }
+
+        }
+
+        // Printing the column name.
+
+        _green();
+        
+        int _accsee_Allocated_Blocks = 0;
+        int _index_Jumper = 0;
+        int _string_Length;
+        int _middle_Balancer;
+        int _sum_All_The_Values_Of_Allocated_Blocks = 0;
+
+        for(; _index_Jumper < _length_Of_The_First_Line - 1; _accsee_Allocated_Blocks++)
+        {
+
+            _string_Length = strlen(_a_Copy_Of_First_Line + _index_Jumper);
+
+            _middle_Balancer = (*(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) + 1 - _string_Length) / 2;
+
+            if(_middle_Balancer)
+            {
+
+                gotoxy(_middle_Balancer + _sum_All_The_Values_Of_Allocated_Blocks, 9);
+
+                printf("%s", _a_Copy_Of_First_Line + _index_Jumper);
+
+                _sum_All_The_Values_Of_Allocated_Blocks += *(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) + 1;
+
+                gotoxy(_sum_All_The_Values_Of_Allocated_Blocks + 1, 9);
+
+            }else
+            {
+                printf("%s", _a_Copy_Of_First_Line + _index_Jumper);
+                
+                _sum_All_The_Values_Of_Allocated_Blocks += *(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) + 1;
+
+                gotoxy(_sum_All_The_Values_Of_Allocated_Blocks + 1, 9);
+
+            }
+
+            _index_Jumper += ((_string_Length) + 1);
+
+        }
+
+        _reset();
+
+        // Making table for print the table.
+
+        int _update_Y_Axis;
+        int _update_X_Axis;
+
+        int _record_Length;
+
+        for(int _index = 0; _index < (_how_Many_Column - 1); _index++)
+        {
+
+            fseek(_which_File_Have_To_Print, 2, 0);
+            fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+
+            _update_X_Axis += *(_address_Of_The_Allocated_Memory + _index) + 1;
+            _update_Y_Axis = 9;
+
+            while(!feof(_which_File_Have_To_Print))
+            {
+
+                _yellow();
+
+                fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+                gotoxy(_update_X_Axis, _update_Y_Axis);
+                printf("|");
+
+                _update_Y_Axis++;
+
+                // Print a straight line on the x axis.
+
+                gotoxy(0, _update_Y_Axis);
+
+                for (int _line = 1; _line <= 122; _line++)
+                {
+                
+                
+                    printf("-");
+
+                }
+
+                _record_Length = strlen(_store_The_Fetched_Line_From_User_Reqired_File);
+
+                // Replace the Conjugate-Character(~) by NULL, The conjugate seprated the each column vale in a row.
+
+                for(int _index = 0; _store_The_Fetched_Line_From_User_Reqired_File[_index] != '\0'; _index++)
+                {
+
+                    if(_store_The_Fetched_Line_From_User_Reqired_File[_index] == '~')
+                    {
+
+                        _store_The_Fetched_Line_From_User_Reqired_File[_index] = '\0';
+
+                    }
+
+                }
+
+                _reset();
+
+                for(int _index_Jumper = 0, _index_For_Assign = 0, _sum_Of_The_Allocated_Memory_Value = 0, _store_Length_Temporary; _index_Jumper < _record_Length - 1; _index_For_Assign++)
+                {
+
+                    printf("%s", _store_The_Fetched_Line_From_User_Reqired_File + _index_Jumper);
+                    
+                    _store_Length_Temporary = strlen(_store_The_Fetched_Line_From_User_Reqired_File + _index_Jumper);
+
+                    _index_Jumper += (strlen(_store_The_Fetched_Line_From_User_Reqired_File  + _index_Jumper) + 1);
+
+                    _sum_Of_The_Allocated_Memory_Value += *(_address_Of_The_Allocated_Memory + _index_For_Assign) + 1;
+
+                    gotoxy(_sum_Of_The_Allocated_Memory_Value + 1, _update_Y_Axis + 1);                    
+                    
+                }
+
+                _update_Y_Axis++;
+
+            }
+
+
+        }
+
+
+        // Printing the last line.
+
+        _update_X_Axis = 0;
+
+        _yellow();
+
+        for(int _index = 0; _index < (_how_Many_Column - 1); _index++)
+        {
+
+            _update_X_Axis += *(_address_Of_The_Allocated_Memory + _index) + 1;
+            gotoxy(_update_X_Axis, _update_Y_Axis);
+            printf("|");
+
+        }
+                    
+        printf("\n");
+
+        for (int _line = 1; _line <= 122; _line++)
+        {
+        
+            printf("-");
+
+        }
+
+        _reset();
+
+    }
+    else
+    {
+
+        // Control came here mean don't have any data on the file.
+
+        system("cls");
+        gotoxy(48, 2);
+        printf("--DON'T FOUND ANY RECORD--");
+        gotoxy(32, 3);
+        printf("-----------------------------------------------------------");
+
+        _red();
+        gotoxy(32, 8);
+        printf("DON'T FOUND ANY RECORD, HIT ANY KEY FOR GO TO THE MENU.");
+
+        _reset();
+
+        // Commands.
+
+        gotoxy(32, 11);
+        printf("1)A FOR ADD A RECORD.");
+
+        gotoxy(32, 13);
+        printf("2)D FOR DELETE A RECORD.");
+        
+        gotoxy(32, 15);
+        printf("3)C FOR ADD MORE COLUMN.");
+
+        gotoxy(32, 17);
+        printf("4)R FOR REMOVE A COLUMN.");
+
+        gotoxy(32, 19);
+        printf("5)S FOR SEARCH.");
+
+        gotoxy(32, 21);
+        printf("6)U FOR UPDATE.");
+
+        gotoxy(32, 23);
+        printf("7)B FOR BACK.");
+
+        gotoxy(32, 25);
+        printf("8)M FOR THE MAIN MENU.");
+
+        _reset();
+
+    }
 
 }
