@@ -122,6 +122,13 @@ void _green(void)
     printf("\033[0;32m");
 }
 
+void _yellow(void)
+{
+
+    printf("\033[0;33m");
+
+}
+
 void _reset(void)
 {
 
