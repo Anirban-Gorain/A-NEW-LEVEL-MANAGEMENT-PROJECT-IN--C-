@@ -2388,4 +2388,70 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
 
     }
 
+    if(_user_Choice == 'A' || _user_Choice == 'a')
+    {
+
+        /*
+
+            In the _memory_Allocater function sending the path which option user will open. Then the memory allocater will fetch all the the first a line
+            (METADATA OF COLUMNS) and after process memory allocater will produce COLUMN-NAME, COLUMN-LIMITION and store all
+            these data then this function will call _recoed_Inserter function where will send all the data which produce by this 
+            function and the one by one _recoed_Inserter will show all the COLUMN-NAME, COLUMN-LIMITION and will take data from 
+            the user then taken data will be store on the file.
+
+        */
+
+        _memory_Allocater(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
+
+        _printer(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
+
+    }
+    else if(_user_Choice == 'D' || _user_Choice == 'd')
+    {
+
+        // Code here... 
+
+    }
+    else if(_user_Choice == 'C' || _user_Choice == 'c')
+    {
+
+        // Code here... 
+        
+    }
+    else if(_user_Choice == 'R' || _user_Choice == 'r')
+    {
+
+        // Code here... 
+        
+    }
+    else if(_user_Choice == 'S' || _user_Choice == 's')
+    {
+
+        // Code here... 
+        
+    }
+    else if(_user_Choice == 'U' || _user_Choice == 'u')
+    {
+
+        // Code here... 
+        
+    }
+    else if(_user_Choice == 'B' || _user_Choice == 'b')
+    {
+
+        // Code here... 
+        
+    }
+    else if(_user_Choice == 'M' || _user_Choice == 'm')
+    {
+
+        // Code here... 
+        
+    }else
+    {
+
+        // Code here... 
+
+    }
+
 }
