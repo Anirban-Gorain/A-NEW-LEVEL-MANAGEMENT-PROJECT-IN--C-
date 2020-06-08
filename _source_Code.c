@@ -1334,14 +1334,8 @@ int _menu(void){
             }
 
             // NOW, have complete usable path.
-
-            // Sending the actual path of the which option the user selected, And the memory allocater work will be, Seprate and store the limition of each column, Seprate the name of the each column and store it, etc.
-
-            // _memory_Allocater(_store_Path);
+            
             _printer(_store_Path);
-
-            getch();
-            _menu();
 
         }
 
@@ -1963,10 +1957,10 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Op
 
     _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
 
+    fclose(_address_Of_The_User_Required_File);
     free(_limition_Of_Each_Column);
     free(_store_Each_Column_Name);
     free(_here_Will_Store_All_The_Record_Temporary);
-    free(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
 }
 
 // Record insert function.
@@ -1992,7 +1986,7 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
         printf("ENTER THE %s [MAXIMUM %d CHARACTERS IS ALLOWED]", _store_Each_Column_Name + _index_Healper, *(_limition_Of_Each_Column + _index));
         fflush(stdin);
         gets(_here_Will_Store_All_The_Record_Temporary);
-        fprintf(_address_Of_Where_Will_Store_Data, "%s-", _here_Will_Store_All_The_Record_Temporary);
+        fprintf(_address_Of_Where_Will_Store_Data, "%s~", _here_Will_Store_All_The_Record_Temporary);
 
         _index_Healper += (strlen(_index_Healper + _store_Each_Column_Name) + 1);
     }
@@ -2005,6 +1999,8 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
 
 char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
 {
+
+    char _user_Choice;
 
     system("cls");
 
@@ -2227,7 +2223,7 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
         // Making table for print the table.
 
         int _update_Y_Axis;
-        int _update_X_Axis;
+        int _update_X_Axis = 0;
 
         int _record_Length;
 
@@ -2248,7 +2244,6 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
                 fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
                 gotoxy(_update_X_Axis, _update_Y_Axis);
                 printf("|");
-
                 _update_Y_Axis++;
 
                 // Print a straight line on the x axis.
@@ -2330,14 +2325,13 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
 
         _reset();
 
-        char _user_Choice;
-
         gotoxy(0, 4 + _update_Y_Axis);
         printf("ENTER YOUR CHOICE:");
         fflush(stdin);
         scanf("%c", &_user_Choice);
 
-        return _user_Choice;
+        fclose(_which_File_Have_To_Print);
+        free(_address_Of_The_Allocated_Memory);
 
     }
     else
@@ -2391,8 +2385,6 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
         printf("ENTER YOUR CHOICE:");
         fflush(stdin);
         scanf("%c", &_user_Choice);
-
-        return _user_Choice;
 
     }
 
