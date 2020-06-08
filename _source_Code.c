@@ -2330,6 +2330,15 @@ void _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
 
         _reset();
 
+        char _user_Choice;
+
+        gotoxy(0, 4 + _update_Y_Axis);
+        printf("ENTER YOUR CHOICE:");
+        fflush(stdin);
+        scanf("%c", &_user_Choice);
+
+        return _user_Choice;
+
     }
     else
     {
@@ -2375,6 +2384,15 @@ void _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
         printf("8)M FOR THE MAIN MENU.");
 
         _reset();
+
+        char _user_Choice;
+
+        gotoxy(32, 28);
+        printf("ENTER YOUR CHOICE:");
+        fflush(stdin);
+        scanf("%c", &_user_Choice);
+
+        return _user_Choice;
 
     }
 
