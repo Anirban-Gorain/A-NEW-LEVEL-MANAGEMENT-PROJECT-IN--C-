@@ -28,7 +28,7 @@ int _delete_Menu(void);
 void _column_Maker(void);
 void _memory_Allocater(char *);
 void _record_Inserter(int , int *, char *, char *, char *);
-void _printer(char *);
+char _printer(char *);
 void _yellow(void);
 
 int main(void)
@@ -2003,7 +2003,7 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
 
 // Printer
 
-void _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
+char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
 {
 
     system("cls");
