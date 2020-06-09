@@ -1493,8 +1493,7 @@ int _delete_Menu(void){
         printf("%s", _to_Store_Menu_Diffrent_Operation);
 
     }
-    fclose(_address_Of_The_Menu_Dot_Txt);
-
+ 
     gotoxy(32, 4 + _update_Y_Axis);
     printf("ENTER THE SERIAL NUMBER OF THE MENU WHICH MENU YOU WANT TO DELETE, OR PRESS \'P\' TO GO");
     gotoxy(32, 5 + _update_Y_Axis);
@@ -1806,9 +1805,9 @@ void _column_Maker(void){
 
 // Memory allocater for store record.
 
-void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option){
+void _memory_Allocater(char *_path_Of_The_Selected_Option){
 
-    FILE *_address_Of_The_User_Required_File = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "a+");
+    FILE *_address_Of_The_User_Required_File = fopen(_path_Of_The_Selected_Option, "a+");
 
     char _store_the_First_Line_Of_User_Reqired_File[200];
 
@@ -1955,7 +1954,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Op
 
     char *_here_Will_Store_All_The_Record_Temporary = (char*) malloc(sizeof(char) * _store_The_Highest_Number);
 
-    _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
+    _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _path_Of_The_Selected_Option);
 
     fclose(_address_Of_The_User_Required_File);
     free(_limition_Of_Each_Column);
@@ -1965,7 +1964,7 @@ void _memory_Allocater(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Op
 
 // Record insert function.
 
-void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char *_store_Each_Column_Name, char *_here_Will_Store_All_The_Record_Temporary, char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
+void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char *_store_Each_Column_Name, char *_here_Will_Store_All_The_Record_Temporary, char *_path_Of_The_Selected_Option)
 {
 
     system("cls");
@@ -1977,7 +1976,7 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
     int _index_Healper = 0;
     
     // Opening file where will be store data.
-    FILE *_address_Of_Where_Will_Store_Data = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "a+");
+    FILE *_address_Of_Where_Will_Store_Data = fopen(_path_Of_The_Selected_Option, "a+");
     fprintf(_address_Of_Where_Will_Store_Data, "\n");
     for(int _index = 0; _how_Many_Column > _index; _index++)
     {
@@ -1997,14 +1996,14 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
 
 // Printer
 
-char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
+char _printer(char *_path_Of_The_Selected_Option)
 {
 
     char _user_Choice;
 
     system("cls");
 
-    FILE *_which_File_Have_To_Print = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "r");
+    FILE *_which_File_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
 
     char _store_File_To_Print[122] = {[0 ... 121] = '\0'};
 
@@ -2016,7 +2015,7 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
     // Reopen the same file.
 
     fclose(_which_File_Have_To_Print);
-    _which_File_Have_To_Print = fopen(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option, "r");
+    _which_File_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
 
     if(_is_Empty != 0)
     {
@@ -2401,15 +2400,15 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
 
         */
 
-        _memory_Allocater(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
+        _memory_Allocater(_path_Of_The_Selected_Option);
 
-        _printer(_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option);
+        _printer(_path_Of_The_Selected_Option);
 
     }
     else if(_user_Choice == 'D' || _user_Choice == 'd')
     {
 
-        // Code here... 
+        // Code here...
 
     }
     else if(_user_Choice == 'C' || _user_Choice == 'c')
@@ -2453,5 +2452,14 @@ char _printer(char *_addres_Of_Where_Stored_The_Path_Of_The_Selected_Option)
         // Code here... 
 
     }
+
+}
+
+// Delete record.
+
+void _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_Which_File_Will_Be_Delete)
+{
+
+
 
 }
