@@ -2414,7 +2414,6 @@ char _printer(char *_path_Of_The_Selected_Option)
         scanf("%d", &_serial_Number_Of_delete_Item_Will_Be_Delete);
 
         _delete_Record(_path_Of_The_Selected_Option, _serial_Number_Of_delete_Item_Will_Be_Delete);
-        _printer(_path_Of_The_Selected_Option);
 
     }
     else if(_user_Choice == 'C' || _user_Choice == 'c')
