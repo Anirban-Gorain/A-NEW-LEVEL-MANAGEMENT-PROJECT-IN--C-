@@ -2511,7 +2511,14 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
 
         // In this function will be delete will be only the record not any COLUMN name related data, For this first placeing the column name.
         fscanf(_actual_File, "%s", _swap_Container);
-        fprintf(_temporary_File, "%s\n", _swap_Container);
+        fprintf(_temporary_File, "%s", _swap_Container);
+
+        if(_how_Many_Record > 2)
+        {
+
+            fprintf(_temporary_File, "\n");
+
+        }
         
         while(!feof(_actual_File))
         {
