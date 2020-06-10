@@ -2003,19 +2003,19 @@ char _printer(char *_path_Of_The_Selected_Option)
 
     system("cls");
 
-    FILE *_which_File_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
+    FILE *_delete_Item_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
 
     char _store_File_To_Print[122] = {[0 ... 121] = '\0'};
 
     // Checking file empty or not.
 
-    fseek(_which_File_Have_To_Print, 0, 2);
-    int _is_Empty = ftell(_which_File_Have_To_Print);
+    fseek(_delete_Item_Have_To_Print, 0, 2);
+    int _is_Empty = ftell(_delete_Item_Have_To_Print);
 
     // Reopen the same file.
 
-    fclose(_which_File_Have_To_Print);
-    _which_File_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
+    fclose(_delete_Item_Have_To_Print);
+    _delete_Item_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
 
     if(_is_Empty != 0)
     {
@@ -2038,7 +2038,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         // Taking the first line which line contain all the information like  How many COLUMN, Maximum size of the each column also name of the each column, Of a particualar option.
 
-        fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+        fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
         // Finding the how many column existing.
 
@@ -2132,14 +2132,14 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         // The down-ward exta 2 line of code because of want to open the record from the second line.
 
-        fseek(_which_File_Have_To_Print, 2, 0);
-        fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+        fseek(_delete_Item_Have_To_Print, 2, 0);
+        fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
         int _second_line_Length = strlen(_store_The_Fetched_Line_From_User_Reqired_File);
 
-        while(!feof(_which_File_Have_To_Print))
+        while(!feof(_delete_Item_Have_To_Print))
         {
-            fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+            fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
             _second_line_Length = strlen(_store_The_Fetched_Line_From_User_Reqired_File);
 
@@ -2229,18 +2229,18 @@ char _printer(char *_path_Of_The_Selected_Option)
         for(int _index = 0; _index < (_how_Many_Column - 1); _index++)
         {
 
-            fseek(_which_File_Have_To_Print, 2, 0);
-            fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+            fseek(_delete_Item_Have_To_Print, 2, 0);
+            fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
             _update_X_Axis += *(_address_Of_The_Allocated_Memory + _index) + 1;
             _update_Y_Axis = 9;
 
-            while(!feof(_which_File_Have_To_Print))
+            while(!feof(_delete_Item_Have_To_Print))
             {
 
                 _yellow();
 
-                fscanf(_which_File_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+                fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
                 gotoxy(_update_X_Axis, _update_Y_Axis);
                 printf("|");
                 _update_Y_Axis++;
@@ -2329,7 +2329,7 @@ char _printer(char *_path_Of_The_Selected_Option)
         fflush(stdin);
         scanf("%c", &_user_Choice);
 
-        fclose(_which_File_Have_To_Print);
+        fclose(_delete_Item_Have_To_Print);
         free(_address_Of_The_Allocated_Memory);
 
     }
@@ -2408,7 +2408,13 @@ char _printer(char *_path_Of_The_Selected_Option)
     else if(_user_Choice == 'D' || _user_Choice == 'd')
     {
 
-        // Code here...
+        int _serial_Number_Of_delete_Item_Will_Be_Delete;
+
+        printf("ENTER THE SERIAL NUMBER WHICH ROW YOU WANT TO DELETE:");
+        scanf("%d", &_serial_Number_Of_delete_Item_Will_Be_Delete);
+
+        _delete_Record(_path_Of_The_Selected_Option, _serial_Number_Of_delete_Item_Will_Be_Delete);
+        _printer(_path_Of_The_Selected_Option);
 
     }
     else if(_user_Choice == 'C' || _user_Choice == 'c')
@@ -2457,9 +2463,181 @@ char _printer(char *_path_Of_The_Selected_Option)
 
 // Delete record.
 
-void _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_Which_File_Will_Be_Delete)
+int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_delete_Item_Will_Be_Delete)
 {
 
+    system("cls");
+
+    FILE *_actual_File = fopen(_path_Of_The_Selected_Option, "r");
+    FILE *_temporary_File = fopen("MENU/TEMPORARY_RECORD.txt", "w");
+    char _swap_Container[150] = {[0 ... 149] = '\0'};
+
+    if(_actual_File == NULL)
+    {
+
+        _red();
+        gotoxy(32, 8);
+        printf("SOMETHING WRONG, PRESS ANY KEY TO CONTINUE.");
+        return 0;
+
+    }
+    else
+    {
+        
+        int _delete_Item = 1;
+        int _which_Line = 1;
+        int _how_Many_Record = 0;
+        bool _engine_Can_Start = false;
+        int _serial_Number;
+        char _store_Serial[10];
+        int _index;
+        int _total_Length_Of_Each_Record;
+
+
+        // Finding end of the file.
+
+        while (!feof(_actual_File))
+        {
+            
+            fscanf(_actual_File, "%s", _swap_Container);
+            _how_Many_Record++;
+
+        }
+
+        _how_Many_Record--;
+
+        // Reset file.
+        fclose(_actual_File);
+        _actual_File = fopen(_path_Of_The_Selected_Option, "r");
+
+        // In this function will be delete will be only the record not any COLUMN name related data, For this first placeing the column name.
+        fscanf(_actual_File, "%s", _swap_Container);
+        fprintf(_temporary_File, "%s\n", _swap_Container);
+        
+        while(!feof(_actual_File))
+        {
+
+            fscanf(_actual_File, "%s", _swap_Container);
+
+            if(_serial_Number_Of_delete_Item_Will_Be_Delete == _delete_Item)
+            {
+
+                _delete_Item++;
+                _engine_Can_Start = true;
+
+                for(_index = 0; _swap_Container[_index] != ')'; _index++)
+                {
+
+                    _store_Serial[_index] = _swap_Container[_index];
+
+                }
+
+                _serial_Number = atoi(_store_Serial);
+
+                continue;
+
+            }
+
+            /*
+            
+                Each record have a serial number like,
+                1)A
+                2)B
+                3)C
+                4)D
+                .....
+                So, Problem is when will delete any record, Let now 2)B.
+                Serial number will not be change automatically, EX
+
+                1)A
+                3)C
+                4)D
+
+                But serial number must be,
+
+                1)A
+                2)C
+                3)D
+
+                till before fprint() code will be for this problem. 
+            
+            */
+
+            // Finding bracket.
+
+            for(_index = 0; _swap_Container[_index] != ')'; _index++);
+            _index--;
+
+            if(_engine_Can_Start == true)
+            {
+
+                for (int _assign_Assigner; _index != -1; _index--)
+                {
+
+                    _assign_Assigner = _index;
+                    _total_Length_Of_Each_Record = strlen(_swap_Container);
+                    _total_Length_Of_Each_Record--;
+
+                    for(; _assign_Assigner <= (_total_Length_Of_Each_Record - 1); _assign_Assigner++)
+                    {
+
+                        _swap_Container[_assign_Assigner] = _swap_Container[_assign_Assigner + 1];
+
+                    }
+
+                    _swap_Container[_assign_Assigner] = '\0';
+
+                }
+                fprintf(_temporary_File, "%d%s", _serial_Number, _swap_Container);
+                
+                _serial_Number++;
+
+            }
+            else
+            {
+
+                fprintf(_temporary_File, "%s", _swap_Container);
+
+            }
+            
+            _delete_Item++;
+            _which_Line++;
+
+            if(_how_Many_Record != _which_Line)
+            fprintf(_temporary_File, "\n");
+
+        }
+        
+        fclose(_actual_File);
+        fclose(_temporary_File);
+
+
+        if(!remove(_path_Of_The_Selected_Option))
+        {
+
+            rename("MENU/TEMPORARY_RECORD.txt", _path_Of_The_Selected_Option);
+            _green();
+            gotoxy(32, 8);
+            printf("RECORD DELETED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
+            getch();
+            _reset();
+
+        }
+        else
+        {
+            
+            _red();
+            gotoxy(32, 8);
+            printf("RECORD NOT DELETED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
+            getch();
+            _reset();
+            remove("MENU/TEMPORARY_RECORD.txt");
+        
+        }
+        
+    }
+
+    _printer(_path_Of_The_Selected_Option);
 
 
 }
