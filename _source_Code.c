@@ -2191,7 +2191,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
             _string_Length = strlen(_a_Copy_Of_First_Line + _index_Jumper);
 
-            _middle_Balancer = (*(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) + 1 - _string_Length) / 2;
+            _middle_Balancer = (*(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) - _string_Length) / 2;
 
             if(_middle_Balancer)
             {
@@ -2202,7 +2202,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
                 _sum_All_The_Values_Of_Allocated_Blocks += *(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) + 1;
 
-                gotoxy(_sum_All_The_Values_Of_Allocated_Blocks + 1, 9);
+                gotoxy(_sum_All_The_Values_Of_Allocated_Blocks, 9);
 
             }else
             {
@@ -2210,7 +2210,7 @@ char _printer(char *_path_Of_The_Selected_Option)
                 
                 _sum_All_The_Values_Of_Allocated_Blocks += *(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) + 1;
 
-                gotoxy(_sum_All_The_Values_Of_Allocated_Blocks + 1, 9);
+                gotoxy(_sum_All_The_Values_Of_Allocated_Blocks, 9);
 
             }
 
@@ -2242,7 +2242,7 @@ char _printer(char *_path_Of_The_Selected_Option)
                 _yellow();
 
                 fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
-                gotoxy(_update_X_Axis, _update_Y_Axis);
+                gotoxy(_update_X_Axis - 1, _update_Y_Axis);
                 printf("|");
                 _update_Y_Axis++;
 
@@ -2287,7 +2287,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
                     _sum_Of_The_Allocated_Memory_Value += *(_address_Of_The_Allocated_Memory + _index_For_Assign) + 1;
 
-                    gotoxy(_sum_Of_The_Allocated_Memory_Value + 1, _update_Y_Axis + 1);                    
+                    gotoxy(_sum_Of_The_Allocated_Memory_Value, _update_Y_Axis + 1);                    
                     
                 }
 
@@ -2309,7 +2309,7 @@ char _printer(char *_path_Of_The_Selected_Option)
         {
 
             _update_X_Axis += *(_address_Of_The_Allocated_Memory + _index) + 1;
-            gotoxy(_update_X_Axis, _update_Y_Axis);
+            gotoxy(_update_X_Axis - 1, _update_Y_Axis);
             printf("|");
 
         }
