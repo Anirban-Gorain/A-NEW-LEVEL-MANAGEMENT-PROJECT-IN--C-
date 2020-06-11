@@ -2027,6 +2027,8 @@ char _printer(char *_path_Of_The_Selected_Option)
         
         // This downward code will be print a line on the x axis.
 
+        _yellow();
+
         for (int _line = 1; _line <= 122; _line++)
         {
             
@@ -2034,6 +2036,8 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         }
         
+        _reset();
+
         int _how_Many_Column = 0;
         char _store_The_Fetched_Line_From_User_Reqired_File[200] = {[0 ... 119] = '\0'};
 
