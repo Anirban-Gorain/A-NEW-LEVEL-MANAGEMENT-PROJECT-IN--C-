@@ -30,6 +30,7 @@ void _memory_Allocater(char *);
 void _record_Inserter(int , int *, char *, char *, char *);
 char _printer(char *);
 void _yellow(void);
+int _add_New_Column(char *, int);
 
 int main(void)
 {
@@ -2419,7 +2420,12 @@ char _printer(char *_path_Of_The_Selected_Option)
     else if(_user_Choice == 'C' || _user_Choice == 'c')
     {
 
-        // Code here... 
+        int _How_Many_Column_User_Want_To_Enter;
+
+        printf("ENTER HOW MANY COLUMN YOU WANT ADD:");
+        scanf("%d", &_How_Many_Column_User_Want_To_Enter);
+
+        _add_New_Column(_path_Of_The_Selected_Option, _How_Many_Column_User_Want_To_Enter);
         
     }
     else if(_user_Choice == 'R' || _user_Choice == 'r')
@@ -2645,5 +2651,108 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
 
     _printer(_path_Of_The_Selected_Option);
 
+
+}
+
+// Add new column function
+
+int _add_New_Column(char *_path_Of_The_Selected_Option, int _How_Many_Column_User_Want_To_Enter)
+{
+    
+    system("cls");
+
+    FILE *_actual_File = fopen(_path_Of_The_Selected_Option, "r");
+    FILE *_temporary_File = fopen("MENU/TEMPORARY_RECORD.txt", "w");
+    char _swap_Container[500] = {[0 ... 499] = '\0'};
+    int _limitation_Size;
+    int _update_Y_Axis = 8;
+    int _how_Many_Record = 0;
+    int _which_Line = 1;
+
+    if(_actual_File == NULL)
+    {
+
+        _red();
+        gotoxy(32, 8);
+        printf("SOMETHING WRONG, PRESS ANY KEY TO CONTINUE.");
+        _printer(_path_Of_The_Selected_Option);
+        return 0;
+
+    }
+
+    // Finding end of the file.
+
+    while (!feof(_actual_File))
+    {
+        
+        fscanf(_actual_File, "%s", _swap_Container);
+        _how_Many_Record++;
+
+    }
+
+   // Reset file.
+
+    fclose(_actual_File);
+    _actual_File = fopen(_path_Of_The_Selected_Option, "r");
+
+    // Printing the already stored column.
+
+    fscanf(_actual_File, "%s", _swap_Container);
+    fprintf(_temporary_File, "%s", _swap_Container);
+
+    // Adding new column.
+
+    for(int _stop = 1; _How_Many_Column_User_Want_To_Enter >= _stop; _stop++)
+    {
+
+        gotoxy(32 ,_update_Y_Axis);
+        printf("ENTER THE %dST COLUMN NAME:", _stop);
+        fflush(stdin);
+        gets(_swap_Container);
+
+        _update_Y_Axis++;
+        gotoxy(32 ,_update_Y_Axis);
+        printf("ENTER THE LIMITION SIZE OF %dST COLUMN [SIZE MUST BE LESS THEN 15]:", _stop);
+        fflush(stdin);
+        scanf("%d", &_limitation_Size);
+
+        if(_limitation_Size > 15)
+            _limitation_Size = 15;
+
+        fprintf(_temporary_File, "%s(%d),", _swap_Container, _limitation_Size);
+
+        _update_Y_Axis += 2;
+
+
+    }
+
+    fprintf(_temporary_File, "\n");
+
+    // Printing already stored data.
+
+    while (!feof(_actual_File))
+    {
+        
+        fscanf(_actual_File, "%s", _swap_Container);
+        fprintf(_temporary_File, "%s", _swap_Container);
+
+        _which_Line++;
+
+        if(_how_Many_Record != _which_Line)
+        fprintf(_temporary_File, "\n");
+
+    }
+    
+    fclose(_actual_File);
+    fclose(_temporary_File);
+
+    remove(_path_Of_The_Selected_Option);
+    rename("MENU/TEMPORARY_RECORD.txt", _path_Of_The_Selected_Option);
+    _green();
+    gotoxy(32, 2 + _update_Y_Axis);
+    printf("COLUMN ADDED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
+    getch();
+    _reset();
+    _printer(_path_Of_The_Selected_Option);
 
 }
