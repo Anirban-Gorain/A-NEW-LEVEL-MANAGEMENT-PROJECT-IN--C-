@@ -2232,7 +2232,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         int _record_Length;
 
-        for(int _index = 0; _index < (_how_Many_Column - 1); _index++)
+        for(int _index = 0; _index < (_how_Many_Column); _index++)
         {
 
             fseek(_delete_Item_Have_To_Print, 2, 0);
@@ -2310,7 +2310,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         _yellow();
 
-        for(int _index = 0; _index < (_how_Many_Column - 1); _index++)
+        for(int _index = 0; _index < (_how_Many_Column); _index++)
         {
 
             _update_X_Axis += *(_address_Of_The_Allocated_Memory + _index) + 1;
