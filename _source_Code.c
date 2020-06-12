@@ -31,6 +31,7 @@ void _record_Inserter(int , int *, char *, char *, char *);
 char _printer(char *);
 void _yellow(void);
 int _add_New_Column(char *, int);
+int _delete_Column_With_All_The_Values(char *, char *, int);
 
 int main(void)
 {
@@ -2007,6 +2008,8 @@ char _printer(char *_path_Of_The_Selected_Option)
     FILE *_delete_Item_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
 
     char _store_File_To_Print[122] = {[0 ... 121] = '\0'};
+    char _a_Copy_Of_First_Line[200];
+    int _length_Of_The_First_Line;
 
     // Checking file empty or not.
 
@@ -2085,11 +2088,9 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         // In the first line of required file deleting all the Numeric character and bracket also replace 
 
-        char _a_Copy_Of_First_Line[200];
-
         strcpy(_a_Copy_Of_First_Line, _store_The_Fetched_Line_From_User_Reqired_File);
 
-        int _length_Of_The_First_Line  = strlen(_a_Copy_Of_First_Line);
+        _length_Of_The_First_Line  = strlen(_a_Copy_Of_First_Line);
 
         // The downward code will delete all the numeric character and brackets.
 
@@ -2434,9 +2435,9 @@ char _printer(char *_path_Of_The_Selected_Option)
     }
     else if(_user_Choice == 'R' || _user_Choice == 'r')
     {
-
-        // Code here... 
         
+        _delete_Column_With_All_The_Values(_path_Of_The_Selected_Option, _a_Copy_Of_First_Line, _length_Of_The_First_Line);
+
     }
     else if(_user_Choice == 'S' || _user_Choice == 's')
     {
@@ -2758,5 +2759,164 @@ int _add_New_Column(char *_path_Of_The_Selected_Option, int _How_Many_Column_Use
     getch();
     _reset();
     _printer(_path_Of_The_Selected_Option);
+
+}
+
+// Delete column with all the record of the particular column.
+
+int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char *_The_Columns_Names, int _length_Of_The_First_Line_Receiver)
+{
+
+    system("cls");
+
+    // Printing the existing column name.
+
+    _red();
+    printf("\n\n  IF YOU DELETE ANY COLUMN NAME, THEN ALL THE RECORD OF THE PARTICULAR COLUMN WILL BE DELETE.\n\n");
+    _reset();
+
+    int _serial_Number = 1;
+    for(int _index_Jumper = 0; _index_Jumper < _length_Of_The_First_Line_Receiver - 1; _serial_Number++)
+    {
+
+        _yellow();
+        printf("  %d)", _serial_Number);
+        _reset();
+
+        printf(" %s\n", _The_Columns_Names + _index_Jumper);
+        _index_Jumper += (strlen(_The_Columns_Names  + _index_Jumper) + 1);
+
+    }
+
+    // Taking from the user which column user want to delete.
+
+    int _serial_Number_Of_delete_Item;
+
+    
+    printf("\n  ENTER THE SERIAL NUMBER WHICH COLUMN NAME YO WANT TO DELETE:");
+    fflush(stdin);
+    scanf("%d", &_serial_Number_Of_delete_Item);
+
+    if(!(_serial_Number_Of_delete_Item >= 1 && _serial_Number_Of_delete_Item <= (_serial_Number - 1)))
+    {
+
+        _red();
+        printf("\n  YOU ENTERED A WRONG SERIAL NUMBER, TRY AGAIN LATER, PRESS ANY KEY TO CONTINUE");
+        getch();
+        _reset();
+        _printer(_path_Of_The_Selected_Option);
+        return 0;
+
+    }
+
+    // Delete section.
+
+    FILE *_actual_File = fopen(_path_Of_The_Selected_Option, "r");
+    FILE *_temporary_File = fopen("MENU/TEMPORARY_RECORD.txt", "w");
+    char _swap_Container[500] = {[0 ... 499] = '\0'}; 
+
+    // Operation for column.
+    // Taking the column line or column metadata.
+
+    fscanf(_actual_File, "%s", _swap_Container);
+    int _row_Length = strlen(_swap_Container);
+
+    // Now having the column metadata, Replacing all the ',' character by NULL.
+
+    for (int _index = 0; _swap_Container[_index] != '\0'; _index++)
+    {
+        
+        if (_swap_Container[_index] == ',')
+        {
+            
+            _swap_Container[_index] = '\0';
+
+        }
+        
+
+    }
+    
+    // Printing the columns and column's metedata.
+
+    for(int _index_Jumper = 0, _delete_Item = 1; _index_Jumper < _row_Length - 1; _delete_Item++)
+    {
+
+        if (_serial_Number_Of_delete_Item == _delete_Item)
+        {
+
+            _index_Jumper += (strlen(_swap_Container  + _index_Jumper) + 1);
+            continue;
+
+        }
+
+        fprintf(_temporary_File, "%s,", _swap_Container + _index_Jumper);
+        _index_Jumper += (strlen(_swap_Container  + _index_Jumper) + 1);
+        
+
+    }
+
+    // Column matter done, Now deleteing the crossponding record.
+
+    int _serial_Number_For_Choice_1 = 1;
+
+    while(!feof(_actual_File))
+    {
+
+        fscanf(_actual_File, "%s", _swap_Container);
+        _row_Length = strlen(_swap_Container);
+
+        for (int _index = 0; _swap_Container[_index] != '\0'; _index++)
+        {
+            
+            if (_swap_Container[_index] == '~')
+            {
+                
+                _swap_Container[_index] = '\0';
+
+            }
+            
+
+        }
+
+        int _delete_Item = 1;
+
+        fprintf(_temporary_File, "\n");
+        if(_serial_Number_Of_delete_Item == 1)
+        {
+
+            fprintf(_temporary_File, "%d)", _serial_Number_For_Choice_1);
+            _serial_Number_For_Choice_1++;
+
+        }
+
+        for(int _index_Jumper = 0; _index_Jumper < _row_Length - 1; _delete_Item++)
+        {
+
+            if (_serial_Number_Of_delete_Item == _delete_Item)
+            {
+
+                _index_Jumper += (strlen(_swap_Container  + _index_Jumper) + 1);
+                continue;
+
+            }
+
+            fprintf(_temporary_File, "%s~", _swap_Container + _index_Jumper);
+            _index_Jumper += (strlen(_swap_Container  + _index_Jumper) + 1);
+            
+        }
+
+    }
+
+    fclose(_actual_File);
+    fclose(_temporary_File);
+
+    remove(_path_Of_The_Selected_Option);
+    rename("MENU/TEMPORARY_RECORD.txt", _path_Of_The_Selected_Option);
+    _green();
+    printf("\n\n  COLUMN DELETED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
+    
+    _reset();
+    _printer(_path_Of_The_Selected_Option);
+    return 0;
 
 }
