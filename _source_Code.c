@@ -2524,7 +2524,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
         fscanf(_actual_File, "%s", _swap_Container);
         fprintf(_temporary_File, "%s", _swap_Container);
 
-        if(_how_Many_Record > 2)
+        if(_how_Many_Record > 1)
         {
 
             fprintf(_temporary_File, "\n");
