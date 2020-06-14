@@ -33,6 +33,7 @@ void _yellow(void);
 int _add_New_Column(char *, int);
 int _delete_Column_With_All_The_Values(char *, char *, int);
 int _search(char *);
+int _update(char *, int);
 
 int main(void)
 {
@@ -2490,8 +2491,13 @@ char _printer(char *_path_Of_The_Selected_Option)
     }
     else if(_user_Choice == 'U' || _user_Choice == 'u')
     {
+        int _serial_Number_Of_Which_Record_User_Want_To_Update;
 
-        // Code here...
+        printf("ENTER THE SERIAL NUMBER OF WHICH RECORD YOU WANT TO UPDATE:");
+        fflush(stdin);
+        scanf("%d", &_serial_Number_Of_Which_Record_User_Want_To_Update);
+
+        _update(_path_Of_The_Selected_Option, _serial_Number_Of_Which_Record_User_Want_To_Update);
 
     }
     else if(_user_Choice == 'B' || _user_Choice == 'b')
@@ -3110,4 +3116,224 @@ int _search(char *_path_Of_The_Selected_Option)
     getch();
     _printer(_path_Of_The_Selected_Option);
 
+}
+
+// Update.
+
+int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Record_User_Want_To_Update)
+{
+
+    system("cls");
+
+    FILE *_actual_File = fopen(_path_Of_The_Selected_Option, "r");
+    FILE *_temporary_File = fopen("MENU/TEMPORARY_RECORD.txt", "w");
+    char _swap_Container[500] = {[0 ... 499] = '\0'};
+    int _which_Line = 0;
+    int _how_Many_Record = 1;
+    int _how_Many_Column = 0;
+    char _store_The_First_Line[200] = {[0 ... 199] = '\0'};
+
+    if(_actual_File == NULL)
+    {
+
+        _red();
+        gotoxy(32, 8);
+        printf("SOMETHING WRONG, PRESS ANY KEY TO CONTINUE.");
+        _printer(_path_Of_The_Selected_Option);
+        return 0;
+
+    }
+
+    if(_serial_Number_Of_Which_Record_User_Want_To_Update == 0)
+    {
+
+        _red();
+        gotoxy(32, 10);
+        printf("SOMETHING WRONG, 0 SERIAL NUMBER IS NOT EXISTS PRESS ANY KEY TO CONTINUE.");
+        _printer(_path_Of_The_Selected_Option);
+        return 0;
+
+    }
+
+    // Finding how many column.
+
+    fscanf(_actual_File, "%s", _store_The_First_Line);
+
+    for (int _index = 0; _store_The_First_Line[_index] != '\0' ; _index++)
+    {
+        
+        if (_store_The_First_Line[_index] == ',')
+        {
+           
+            _how_Many_Column++;
+
+        }
+        
+
+    }
+    
+
+    // Finding how many record.
+
+    while (!feof(_actual_File))
+    {
+
+        fscanf(_actual_File, "%s", _swap_Container);
+        _how_Many_Record++;
+
+    }
+
+    // Reset file.
+
+    fclose(_actual_File);
+    _actual_File = fopen(_path_Of_The_Selected_Option, "r");
+
+    while (!feof(_actual_File))
+    {
+       
+        fscanf(_actual_File, "%s", _swap_Container);
+
+        if (_which_Line == _serial_Number_Of_Which_Record_User_Want_To_Update)
+        {
+
+            char _store_record_To_Print[16];
+            int _length_Of_The_First_Line = strlen(_store_The_First_Line);
+            int _length_Of_The_Which_record_Will_Be_Update = strlen(_swap_Container);
+            int _index_Jumper_For_Column = 0;
+            int _index_Jumper_For_Record = 0;
+            char _permission;
+
+            // Delete the serial from the array.
+
+            int _place_Of_The_Bracket_character =  0;
+
+            for(; _swap_Container[_place_Of_The_Bracket_character] != ')'; _place_Of_The_Bracket_character++);
+
+            // Deletion the bracket character from the array.
+            int _index_For_Deletion;
+
+            for (;_place_Of_The_Bracket_character != -1; _place_Of_The_Bracket_character--)
+            {
+                
+                _index_For_Deletion = _place_Of_The_Bracket_character;
+
+                for(; _swap_Container[_index_For_Deletion + 1] != '\0'; _index_For_Deletion++)
+                {
+
+                    _swap_Container[_index_For_Deletion] = _swap_Container[_index_For_Deletion + 1];
+
+                }
+
+                _swap_Container[_index_For_Deletion] = '\0';
+
+            }
+
+            // Which record will be update, Replace the comma (,) by NULL.
+
+            for(int _index = 0; _store_The_First_Line[_index] != '\0'; _index++)
+            {
+
+                if(_store_The_First_Line[_index] == ',')
+                _store_The_First_Line[_index] = '\0';
+
+            }
+
+            // Replace the conjugate (~) character by null.
+
+            for(int _index = 0; _swap_Container[_index] != '\0'; _index++)
+            {
+
+                if(_swap_Container[_index] == '~')
+                _swap_Container[_index] = '\0';
+
+            }
+
+            // Updateion code down-ward here.
+
+            fprintf(_temporary_File, "%d)", _serial_Number_Of_Which_Record_User_Want_To_Update);
+
+            _red();
+            printf("\n\n  READ EVERY MESSAGE CAREFULLY THE TAKE ANY ACTION.\n\n");
+            _reset();
+
+            while (_how_Many_Column)
+            {
+
+                printf("  CURRENTLY COLUMN \'%s\' CONTAIN \'%s\' THIS DATA, IF YOU WANT TO SKIPED THIS COLUMN'S DATA TO UPDATE THE PRESS \'S\' EXCEPT \'Y\':\n  ", (_store_The_First_Line + _index_Jumper_For_Column), (_swap_Container + _index_Jumper_For_Record));
+
+                fflush(stdin);
+                scanf("%c", &_permission);
+
+                if(_permission == 's' || _permission == 'S')
+                {
+
+                    _yellow();
+                    printf("\n  SKIPPED");
+                    _reset();
+
+                    fprintf(_temporary_File, "%s~", (_swap_Container + _index_Jumper_For_Record));
+        
+                }
+                else
+                {
+                    
+                    printf("\n  CURRENTLY COLUMN %s CONTAIN %s THIS DATA, ENTER YOU UPDATED DATA [MAXIMUM NUMBER OF CHARACTER ALLOWED IS 15]:\n  ", (_store_The_First_Line + _index_Jumper_For_Column), (_swap_Container + _index_Jumper_For_Record));
+                    fflush(stdin);
+                    gets(_store_record_To_Print);
+
+                    fprintf(_temporary_File, "%s~", _store_record_To_Print);
+
+                }
+                
+                _index_Jumper_For_Column += (strlen(_store_The_First_Line  + _index_Jumper_For_Column) + 1);
+                _index_Jumper_For_Record += (strlen(_swap_Container  + _index_Jumper_For_Record) + 1);
+                _how_Many_Column--;
+
+                printf("\n\n");
+
+            }
+            
+
+            _which_Line++;
+
+            if(_how_Many_Record != _which_Line)
+            fprintf(_temporary_File, "\n");
+
+            continue;
+
+        }
+        
+        fprintf(_temporary_File, "%s", _swap_Container);
+
+        _which_Line++;
+
+        if(_how_Many_Record != _which_Line)
+        fprintf(_temporary_File, "\n");
+
+    }
+
+    fclose(_temporary_File);
+    fclose(_actual_File);
+
+    if(!remove(_path_Of_The_Selected_Option))
+    {
+
+        _green();
+        printf("  DATA UPDATED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
+
+    }
+    else
+    {
+
+        _red();
+        printf("  DATA UPDATED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
+
+    }
+
+    getch();
+    rename("MENU/TEMPORARY_RECORD.txt", _path_Of_The_Selected_Option);
+
+    _reset();
+    _printer(_path_Of_The_Selected_Option);
+    
 }
