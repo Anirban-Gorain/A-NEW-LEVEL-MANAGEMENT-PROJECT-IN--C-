@@ -27,7 +27,7 @@ int _space_Remover(char *);
 int _delete_Menu(void);
 void _column_Maker(void);
 void _memory_Allocater(char *);
-void _record_Inserter(int , int *, char *, char *, char *);
+void _record_Inserter(int , int *, char *, char *, char *, int);
 char _printer(char *);
 void _yellow(void);
 int _add_New_Column(char *, int);
@@ -1955,9 +1955,51 @@ void _memory_Allocater(char *_path_Of_The_Selected_Option){
 
     }
 
+    // Finding the last serial number.
+
+    // Fetch the last line of the MENU.txt
+
+    fclose(_address_Of_The_User_Required_File);
+    _address_Of_The_User_Required_File = fopen(_path_Of_The_Selected_Option, "r");
+    char _store_Last_Line[500];
+
+    while(!feof(_address_Of_The_User_Required_File))
+    {
+
+        fscanf(_address_Of_The_User_Required_File, "%s", &_store_Last_Line);
+
+    }
+
+    // This below section of code to find the next serial number like on the menu file if the last line is 1 then recomendate will be 2
+
+    // Find how many character have (Of the last of the file) from the one index to till before the ')'. Why starting the index from the 1? Answer? >> The lowest number will be 1) like this, It confrom that block 0 never will contain any time ')'. And I want to find where have the ')';
+
+    int _find_Bracket_File;
+
+    for (_find_Bracket_File = 1; *(_store_Last_Line + _find_Bracket_File) != ')'; _find_Bracket_File++);
+
+    char *_Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
+
+    for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
+    {
+
+        *(_Address_of_The_Allocated_Block_1 + _index) = *(_store_Last_Line + _index);
+
+    }
+
+    // Assign null at the last of allocated memory.
+
+    *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
+
+    // Now convert the fetched serial number from character to integer value.
+
+    int _recomendate_Serial_Number = atoi(_Address_of_The_Allocated_Block_1);
+    free(_Address_of_The_Allocated_Block_1);
+    _recomendate_Serial_Number++;
+
     char *_here_Will_Store_All_The_Record_Temporary = (char*) malloc(sizeof(char) * _store_The_Highest_Number);
 
-    _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _path_Of_The_Selected_Option);
+    _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _path_Of_The_Selected_Option, _recomendate_Serial_Number);
 
     fclose(_address_Of_The_User_Required_File);
     free(_limition_Of_Each_Column);
@@ -1967,7 +2009,7 @@ void _memory_Allocater(char *_path_Of_The_Selected_Option){
 
 // Record insert function.
 
-void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char *_store_Each_Column_Name, char *_here_Will_Store_All_The_Record_Temporary, char *_path_Of_The_Selected_Option)
+void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char *_store_Each_Column_Name, char *_here_Will_Store_All_The_Record_Temporary, char *_path_Of_The_Selected_Option, int _recomendate_Serial_Number)
 {
 
     system("cls");
@@ -1980,7 +2022,7 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
 
     // Opening file where will be store data.
     FILE *_address_Of_Where_Will_Store_Data = fopen(_path_Of_The_Selected_Option, "a+");
-    fprintf(_address_Of_Where_Will_Store_Data, "\n");
+    fprintf(_address_Of_Where_Will_Store_Data, "\n%d)", _recomendate_Serial_Number);
     for(int _index = 0; _how_Many_Column > _index; _index++)
     {
 
