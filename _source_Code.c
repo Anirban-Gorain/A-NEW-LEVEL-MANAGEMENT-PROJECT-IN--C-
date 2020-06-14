@@ -2070,7 +2070,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         // Commands.
 
-        printf("1)A FOR ADD A RECORD.\n2)D FOR DELETE A RECORD.\n3)C FOR ADD MORE COLUMN.\n4)R FOR REMOVE A COLUMN.\n5)S FOR SEARCH.\n6)U FOR UPDATE.\n7)B FOR BACK.\n8)M FOR THE MAIN MENU.\n");
+        printf("1)A FOR ADD A RECORD.\n2)D FOR DELETE A RECORD.\n3)C FOR ADD MORE COLUMN.\n4)R FOR REMOVE A COLUMN.\n5)S FOR SEARCH.\n6)U FOR UPDATE.\n7)B FOR BACK.\n8)L FOR LOG-OUT\n");
 
         // This downward code will be print a line on the x axis.
 
@@ -2503,18 +2503,23 @@ char _printer(char *_path_Of_The_Selected_Option)
     else if(_user_Choice == 'B' || _user_Choice == 'b')
     {
 
-        // Code here...
+        _menu();
 
     }
-    else if(_user_Choice == 'M' || _user_Choice == 'm')
+    else if(_user_Choice == 'L' || _user_Choice == 'l')
     {
 
-        // Code here...
+        if (_registration_Menu() == true)
+        {
+
+            _menu();
+
+        }
 
     }else
     {
 
-        // Code here...
+        _printer(_path_Of_The_Selected_Option);
 
     }
 
