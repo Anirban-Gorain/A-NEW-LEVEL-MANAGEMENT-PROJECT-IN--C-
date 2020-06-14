@@ -32,6 +32,7 @@ char _printer(char *);
 void _yellow(void);
 int _add_New_Column(char *, int);
 int _delete_Column_With_All_The_Values(char *, char *, int);
+int _search(char *);
 
 int main(void)
 {
@@ -1336,7 +1337,7 @@ int _menu(void){
             }
 
             // NOW, have complete usable path.
-            
+
             _printer(_store_Path);
 
         }
@@ -1495,7 +1496,7 @@ int _delete_Menu(void){
         printf("%s", _to_Store_Menu_Diffrent_Operation);
 
     }
- 
+
     gotoxy(32, 4 + _update_Y_Axis);
     printf("ENTER THE SERIAL NUMBER OF THE MENU WHICH MENU YOU WANT TO DELETE, OR PRESS \'P\' TO GO");
     gotoxy(32, 5 + _update_Y_Axis);
@@ -1891,7 +1892,7 @@ void _memory_Allocater(char *_path_Of_The_Selected_Option){
         {
 
             if(*(_limition_Of_Each_Column + _index_Jumper) / 2 > 4)
-            { 
+            {
 
                 *(_store_Each_Column_Name + _index_For_Assign) = '\0';
                 _index_Jumper++;
@@ -1976,7 +1977,7 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
     printf("-----------------------------------------------------------");
 
     int _index_Healper = 0;
-    
+
     // Opening file where will be store data.
     FILE *_address_Of_Where_Will_Store_Data = fopen(_path_Of_The_Selected_Option, "a+");
     fprintf(_address_Of_Where_Will_Store_Data, "\n");
@@ -2027,18 +2028,18 @@ char _printer(char *_path_Of_The_Selected_Option)
         // Commands.
 
         printf("1)A FOR ADD A RECORD.\n2)D FOR DELETE A RECORD.\n3)C FOR ADD MORE COLUMN.\n4)R FOR REMOVE A COLUMN.\n5)S FOR SEARCH.\n6)U FOR UPDATE.\n7)B FOR BACK.\n8)M FOR THE MAIN MENU.\n");
-        
+
         // This downward code will be print a line on the x axis.
 
         _yellow();
 
         for (int _line = 1; _line <= 122; _line++)
         {
-            
+
             printf("-");
 
         }
-        
+
         _reset();
 
         int _how_Many_Column = 0;
@@ -2064,7 +2065,7 @@ char _printer(char *_path_Of_The_Selected_Option)
         }
 
         /*
-        
+
             Allocating memory crossepondig size to the _how_Many_Column, Let having 3 column allocate will be 3 integer blocks.
 
             Purpose to allocate theese memory blocks?
@@ -2073,20 +2074,20 @@ char _printer(char *_path_Of_The_Selected_Option)
 
             EXAMPLE:
             => Let, Having 2 columns F.name(15), F.price(5) respectively.
-            
+
                     F.name  F.price
             row 1   Mango   12
             row 2   Apple   122
             row 3   Banana  50
 
             Now imagine these are teh allocated 2 memory blocks => |String length of the 'Banana'|Price length of the 'Apple'|
-            
+
 
         */
 
         int *_address_Of_The_Allocated_Memory = (int*) malloc(sizeof(int) * _how_Many_Column);
 
-        // In the first line of required file deleting all the Numeric character and bracket also replace 
+        // In the first line of required file deleting all the Numeric character and bracket also replace
 
         strcpy(_a_Copy_Of_First_Line, _store_The_Fetched_Line_From_User_Reqired_File);
 
@@ -2096,7 +2097,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         for (int _traves_The_Total_Array = 0; _a_Copy_Of_First_Line[_traves_The_Total_Array] != '\0'; _traves_The_Total_Array++)
         {
-            
+
 
 
             if ((_a_Copy_Of_First_Line[_traves_The_Total_Array] >= 48 && _a_Copy_Of_First_Line[_traves_The_Total_Array] <= 57) || (_a_Copy_Of_First_Line[_traves_The_Total_Array] == '(') || (_a_Copy_Of_First_Line[_traves_The_Total_Array] == ')'))
@@ -2115,7 +2116,7 @@ char _printer(char *_path_Of_The_Selected_Option)
                 _traves_The_Total_Array--;
 
             }
-            
+
             if(_a_Copy_Of_First_Line[_traves_The_Total_Array] == ','){
 
                 _a_Copy_Of_First_Line[_traves_The_Total_Array] = '\0';
@@ -2184,7 +2185,7 @@ char _printer(char *_path_Of_The_Selected_Option)
         // Printing the column name.
 
         _green();
-        
+
         int _accsee_Allocated_Blocks = 0;
         int _index_Jumper = 0;
         int _string_Length;
@@ -2212,7 +2213,7 @@ char _printer(char *_path_Of_The_Selected_Option)
             }else
             {
                 printf("%s", _a_Copy_Of_First_Line + _index_Jumper);
-                
+
                 _sum_All_The_Values_Of_Allocated_Blocks += *(_address_Of_The_Allocated_Memory + _accsee_Allocated_Blocks) + 1;
 
                 gotoxy(_sum_All_The_Values_Of_Allocated_Blocks, 9);
@@ -2257,8 +2258,8 @@ char _printer(char *_path_Of_The_Selected_Option)
 
                 for (int _line = 1; _line <= 122; _line++)
                 {
-                
-                
+
+
                     printf("-");
 
                 }
@@ -2285,15 +2286,15 @@ char _printer(char *_path_Of_The_Selected_Option)
                 {
 
                     printf("%s", _store_The_Fetched_Line_From_User_Reqired_File + _index_Jumper);
-                    
+
                     _store_Length_Temporary = strlen(_store_The_Fetched_Line_From_User_Reqired_File + _index_Jumper);
 
                     _index_Jumper += (strlen(_store_The_Fetched_Line_From_User_Reqired_File  + _index_Jumper) + 1);
 
                     _sum_Of_The_Allocated_Memory_Value += *(_address_Of_The_Allocated_Memory + _index_For_Assign) + 1;
 
-                    gotoxy(_sum_Of_The_Allocated_Memory_Value, _update_Y_Axis + 1);                    
-                    
+                    gotoxy(_sum_Of_The_Allocated_Memory_Value, _update_Y_Axis + 1);
+
                 }
 
                 _update_Y_Axis++;
@@ -2318,12 +2319,12 @@ char _printer(char *_path_Of_The_Selected_Option)
             printf("|");
 
         }
-                    
+
         printf("\n");
 
         for (int _line = 1; _line <= 122; _line++)
         {
-        
+
             printf("-");
 
         }
@@ -2363,7 +2364,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         gotoxy(32, 13);
         printf("2)D FOR DELETE A RECORD.");
-        
+
         gotoxy(32, 15);
         printf("3)C FOR ADD MORE COLUMN.");
 
@@ -2400,8 +2401,8 @@ char _printer(char *_path_Of_The_Selected_Option)
 
             In the _memory_Allocater function sending the path which option user will open. Then the memory allocater will fetch all the the first a line
             (METADATA OF COLUMNS) and after process memory allocater will produce COLUMN-NAME, COLUMN-LIMITION and store all
-            these data then this function will call _recoed_Inserter function where will send all the data which produce by this 
-            function and the one by one _recoed_Inserter will show all the COLUMN-NAME, COLUMN-LIMITION and will take data from 
+            these data then this function will call _recoed_Inserter function where will send all the data which produce by this
+            function and the one by one _recoed_Inserter will show all the COLUMN-NAME, COLUMN-LIMITION and will take data from
             the user then taken data will be store on the file.
 
         */
@@ -2431,41 +2432,41 @@ char _printer(char *_path_Of_The_Selected_Option)
         scanf("%d", &_How_Many_Column_User_Want_To_Enter);
 
         _add_New_Column(_path_Of_The_Selected_Option, _How_Many_Column_User_Want_To_Enter);
-        
+
     }
     else if(_user_Choice == 'R' || _user_Choice == 'r')
     {
-        
+
         _delete_Column_With_All_The_Values(_path_Of_The_Selected_Option, _a_Copy_Of_First_Line, _length_Of_The_First_Line);
 
     }
     else if(_user_Choice == 'S' || _user_Choice == 's')
     {
 
-        // Code here... 
-        
+        _search(_path_Of_The_Selected_Option);
+
     }
     else if(_user_Choice == 'U' || _user_Choice == 'u')
     {
 
-        // Code here... 
-        
+        // Code here...
+
     }
     else if(_user_Choice == 'B' || _user_Choice == 'b')
     {
 
-        // Code here... 
-        
+        // Code here...
+
     }
     else if(_user_Choice == 'M' || _user_Choice == 'm')
     {
 
-        // Code here... 
-        
+        // Code here...
+
     }else
     {
 
-        // Code here... 
+        // Code here...
 
     }
 
@@ -2493,7 +2494,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
     }
     else
     {
-        
+
         int _delete_Item = 1;
         int _which_Line = 1;
         int _how_Many_Record = 0;
@@ -2508,7 +2509,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
 
         while (!feof(_actual_File))
         {
-            
+
             fscanf(_actual_File, "%s", _swap_Container);
             _how_Many_Record++;
 
@@ -2530,7 +2531,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
             fprintf(_temporary_File, "\n");
 
         }
-        
+
         while(!feof(_actual_File))
         {
 
@@ -2556,7 +2557,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
             }
 
             /*
-            
+
                 Each record have a serial number like,
                 1)A
                 2)B
@@ -2576,8 +2577,8 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
                 2)C
                 3)D
 
-                till before fprint() code will be for this problem. 
-            
+                till before fprint() code will be for this problem.
+
             */
 
             // Finding bracket.
@@ -2606,7 +2607,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
 
                 }
                 fprintf(_temporary_File, "%d%s", _serial_Number, _swap_Container);
-                
+
                 _serial_Number++;
 
             }
@@ -2616,7 +2617,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
                 fprintf(_temporary_File, "%s", _swap_Container);
 
             }
-            
+
             _delete_Item++;
             _which_Line++;
 
@@ -2624,7 +2625,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
             fprintf(_temporary_File, "\n");
 
         }
-        
+
         fclose(_actual_File);
         fclose(_temporary_File);
 
@@ -2642,16 +2643,16 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
         }
         else
         {
-            
+
             _red();
             gotoxy(32, 8);
             printf("RECORD NOT DELETED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
             getch();
             _reset();
             remove("MENU/TEMPORARY_RECORD.txt");
-        
+
         }
-        
+
     }
 
     _printer(_path_Of_The_Selected_Option);
@@ -2663,7 +2664,7 @@ int _delete_Record(char *_path_Of_The_Selected_Option, int _serial_Number_Of_del
 
 int _add_New_Column(char *_path_Of_The_Selected_Option, int _How_Many_Column_User_Want_To_Enter)
 {
-    
+
     system("cls");
 
     FILE *_actual_File = fopen(_path_Of_The_Selected_Option, "r");
@@ -2689,7 +2690,7 @@ int _add_New_Column(char *_path_Of_The_Selected_Option, int _How_Many_Column_Use
 
     while (!feof(_actual_File))
     {
-        
+
         fscanf(_actual_File, "%s", _swap_Container);
         _how_Many_Record++;
 
@@ -2737,7 +2738,7 @@ int _add_New_Column(char *_path_Of_The_Selected_Option, int _How_Many_Column_Use
 
     while (!feof(_actual_File))
     {
-        
+
         fscanf(_actual_File, "%s", _swap_Container);
         fprintf(_temporary_File, "%s", _swap_Container);
 
@@ -2747,7 +2748,7 @@ int _add_New_Column(char *_path_Of_The_Selected_Option, int _How_Many_Column_Use
         fprintf(_temporary_File, "\n");
 
     }
-    
+
     fclose(_actual_File);
     fclose(_temporary_File);
 
@@ -2792,7 +2793,7 @@ int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char 
 
     int _serial_Number_Of_delete_Item;
 
-    
+
     printf("\n  ENTER THE SERIAL NUMBER WHICH COLUMN NAME YO WANT TO DELETE:");
     fflush(stdin);
     scanf("%d", &_serial_Number_Of_delete_Item);
@@ -2813,7 +2814,7 @@ int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char 
 
     FILE *_actual_File = fopen(_path_Of_The_Selected_Option, "r");
     FILE *_temporary_File = fopen("MENU/TEMPORARY_RECORD.txt", "w");
-    char _swap_Container[500] = {[0 ... 499] = '\0'}; 
+    char _swap_Container[500] = {[0 ... 499] = '\0'};
 
     // Operation for column.
     // Taking the column line or column metadata.
@@ -2825,17 +2826,17 @@ int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char 
 
     for (int _index = 0; _swap_Container[_index] != '\0'; _index++)
     {
-        
+
         if (_swap_Container[_index] == ',')
         {
-            
+
             _swap_Container[_index] = '\0';
 
         }
-        
+
 
     }
-    
+
     // Printing the columns and column's metedata.
 
     for(int _index_Jumper = 0, _delete_Item = 1; _index_Jumper < _row_Length - 1; _delete_Item++)
@@ -2851,7 +2852,7 @@ int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char 
 
         fprintf(_temporary_File, "%s,", _swap_Container + _index_Jumper);
         _index_Jumper += (strlen(_swap_Container  + _index_Jumper) + 1);
-        
+
 
     }
 
@@ -2867,14 +2868,14 @@ int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char 
 
         for (int _index = 0; _swap_Container[_index] != '\0'; _index++)
         {
-            
+
             if (_swap_Container[_index] == '~')
             {
-                
+
                 _swap_Container[_index] = '\0';
 
             }
-            
+
 
         }
 
@@ -2902,7 +2903,7 @@ int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char 
 
             fprintf(_temporary_File, "%s~", _swap_Container + _index_Jumper);
             _index_Jumper += (strlen(_swap_Container  + _index_Jumper) + 1);
-            
+
         }
 
     }
@@ -2914,9 +2915,157 @@ int _delete_Column_With_All_The_Values(char *_path_Of_The_Selected_Option, char 
     rename("MENU/TEMPORARY_RECORD.txt", _path_Of_The_Selected_Option);
     _green();
     printf("\n\n  COLUMN DELETED SUCCESSFULLY, PRESS ANY KEY TO CONTINUE.");
-    
+
     _reset();
     _printer(_path_Of_The_Selected_Option);
     return 0;
+
+}
+
+// Search.
+
+int _search(char *_path_Of_The_Selected_Option)
+{
+
+    char _keyword[100] = {[0 ... 99] = '\0'};
+    int _keyword_Length;
+    char _store_Record_For_Operation[500] = {[0 ... 499] = '\0'};
+    bool _is_Matched_Any_Record = false;
+    int _starting_Point;
+    int _starting_Metadata;
+    int _ending_Metadata;
+
+    system("cls");
+
+    // Taking the keyword which user want to search.
+
+    printf("\n\n ENTER THE KEYWORD WHICH YOU WANT TO SEARCH:");
+    fflush(stdin);
+    gets(_keyword);
+
+    _keyword_Length = strlen(_keyword);
+    char*_store_Sub_String = (char*) malloc(sizeof(char) * _keyword_Length);
+    *(_store_Sub_String + _keyword_Length) = '\0';
+
+
+    // Opening the file which user open.
+
+    FILE *required_File = fopen(_path_Of_The_Selected_Option, "r");
+    int _row_Length;
+
+    // Ignoring the first line.
+    fscanf(required_File, "%s", _store_Record_For_Operation);
+
+    printf("\n\n");
+
+    while(!feof(required_File))
+    {
+
+        fscanf(required_File, "%s", _store_Record_For_Operation);
+
+        // Replacing the conjugate (~) character by null
+
+        _row_Length = strlen(_store_Record_For_Operation);
+
+        for (int _index = 0; _store_Record_For_Operation[_index] != '\0'; _index++)
+        {
+
+            if (_store_Record_For_Operation[_index] == '~')
+            {
+
+                _store_Record_For_Operation[_index] = '\0';
+
+            }
+
+        }
+
+
+
+        for(int _index_Jumper = 0; _index_Jumper < _row_Length - 1; )
+        {
+
+            // The is statement to determine can user key word is grater-than from the record.
+
+            if(!(strlen(_store_Record_For_Operation  + _index_Jumper) >= _keyword_Length))
+            {
+
+                _index_Jumper += (strlen(_store_Record_For_Operation  + _index_Jumper) + 1);
+                continue;
+
+            }
+
+            _starting_Point = _index_Jumper;
+
+
+            for(int _execution_Time = 1; (_execution_Time + (_keyword_Length - 1)) <= strlen(_store_Record_For_Operation + _index_Jumper); _execution_Time++)
+            {
+
+                _starting_Metadata = _starting_Point;
+                for(int _inner_Execution = 1, _assigner = 0; _inner_Execution <= _keyword_Length; _starting_Point++, _assigner++, _inner_Execution++)
+                {
+                    _store_Sub_String[_assigner] = _store_Record_For_Operation[_starting_Point];
+
+                }
+
+                if (!(strcmp(_store_Sub_String, _keyword)))
+                {
+
+                     _ending_Metadata = _starting_Point;
+                    _ending_Metadata--;
+                    _is_Matched_Any_Record = true;
+                    break;
+
+                }
+
+                _starting_Point -= (_keyword_Length - 1);
+            }
+
+            if (!(strcmp(_store_Sub_String, _keyword)))
+            {
+
+                printf(" ");
+                for (int _index = 0; _index < _row_Length; _index++)
+                {
+
+                    if(_index >= _starting_Metadata && _index <= _ending_Metadata)
+                    _yellow();
+                    else
+                    _reset();
+
+                    printf("%c", *(_store_Record_For_Operation + _index));
+
+                }
+                printf("\n\n");
+                break;
+
+            }
+
+            _index_Jumper += (strlen(_store_Record_For_Operation  + _index_Jumper) + 1);
+
+        }
+
+    }
+
+    // Message.
+
+    if(_is_Matched_Any_Record == true)
+    {
+
+        _green();
+        printf("\n THESE ARE ALL THE MATCHED RECORD, PRESS ANY KEY TO CONTINUE");
+
+    }
+    else
+    {
+
+        _red();
+        printf("\n ANY RECORD DOSE NOT MATCHED, PRESS ANY KEY TO CONTINUE");
+
+    }
+    _reset();
+
+    fclose(required_File);
+    getch();
+    _printer(_path_Of_The_Selected_Option);
 
 }
