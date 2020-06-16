@@ -40,14 +40,9 @@ int main(void)
 
     char _user_Choice;
 
-    //if (_registration_Menu() == true)
-    //{
-
-        _menu();
-
-    //}
-
-    // getch();
+    if (_registration_Menu() == true)
+    _menu();
+    
     return 0;
 }
 
@@ -56,11 +51,11 @@ int main(void)
 struct REGISTRATION
 {
 
-    char _user_Name[20];
-    char _password[20];
-    char _answer_City[20];
-    char _answer_Pet[20];
-    char _answer_Vehicle[20];
+    char _user_Name[22];
+    char _password[22];
+    char _answer_City[22];
+    char _answer_Pet[22];
+    char _answer_Vehicle[22];
 };
 typedef struct REGISTRATION _REGISTRATION;
 
@@ -334,6 +329,16 @@ bool _registration_Menu(void)
             {
 
                 return true;
+
+            }
+            else
+            {
+
+                _registration_Menu();
+
+                return false;
+
+
             }
 
             // This section for SIGNED_UP-DATA-UPDATE.
@@ -426,6 +431,28 @@ bool _sign_Up(void)
                 // Control came here mean the taken data and Signed-up time data both are equal and user give permission to delete all the data.
 
                 remove("PASSWORD/DATA.txt");
+
+                FILE *_path = fopen("MENU/PATH/PATH.txt", "r");
+                char _store_Path[200] = {[0 ... 199] = '\0'};
+                // Ignoring the first line.
+                fscanf(_path, "%s", _store_Path);
+                int _ignore_The_Serial_Part = 0;
+
+                while (!feof(_path))
+                {
+                    
+                    fscanf(_path, "%s", _store_Path);
+
+                    for(_ignore_The_Serial_Part = 0; _store_Path[_ignore_The_Serial_Part] != ')'; _ignore_The_Serial_Part++);
+
+                    remove((_store_Path + _ignore_The_Serial_Part + 1));
+
+                }
+
+                fclose(_path);
+                remove("MENU/PATH/PATH.txt");
+                remove("MENU/MENU.txt");
+                
 
                 system("cls");
                 _border(28, 121);
@@ -601,7 +628,7 @@ bool _sign_Up(void)
             gotoxy(32, 26);
             printf("INCLUDE MINIMUM ONE SPECIAL, ONE LOWER, ONE UPPER, CHARACTERS ALSO INCLUDE NUMBERS.");
             gotoxy(32, 27);
-            printf("PASSWORD LENGTH SHOULD BE GRATER THEN 8 AND LESS THEN 20.");
+            printf("PASSWORD LENGTH SHOULD BE GRATER THEN 5 AND LESS THEN 20.");
 
             _reset();
 
@@ -710,6 +737,7 @@ void _security_Questions(bool _permission)
 
     gotoxy(32, 8);
     printf("WHAT IS YOUR CITY NAME, [LENGTH MUST BE LESS THAN 20 CHRAACTER] :");
+    fflush(stdin);
     gets(_sign_up._answer_City);
     _single_Quote_Fixer(&_sign_up._answer_City);
 
@@ -717,14 +745,15 @@ void _security_Questions(bool _permission)
 
     gotoxy(32, 10);
     printf("MAY YOU HAVE ANY PET, [LENGTH MUST BE LESS THAN 20 CHARACTER] :");
+    fflush(stdin);
     gets(_sign_up._answer_Pet);
     _single_Quote_Fixer(&_sign_up._answer_Pet);
 
     // Third question
 
     gotoxy(32, 12);
-    fflush(stdin);
     printf("MAY YOU HAVE ANY VEHICLE, [LENGTH MUST BE LESS THAN 20 CHRAACTER] :");
+    fflush(stdin);
     gets(_sign_up._answer_Vehicle);
     _single_Quote_Fixer(&_sign_up._answer_Vehicle);
 
@@ -741,9 +770,10 @@ void _putting_Sign_Up_Data_On_The_Data_Base(bool _permission_To_Clean_File)
     {
 
         remove("PASSWORD/DATA.txt");
+
     }
 
-    FILE *_file_Pointer = fopen("PASSWORD/DATA.txt", "a+");
+    FILE *_file_Pointer = fopen("PASSWORD/DATA.txt", "w");
 
     // Putting User-name.
 
@@ -764,6 +794,8 @@ void _putting_Sign_Up_Data_On_The_Data_Base(bool _permission_To_Clean_File)
     // Putting Third question answer.
 
     fprintf(_file_Pointer, "%s", _sign_up._answer_Vehicle);
+
+    fclose(_file_Pointer);
 }
 
 // Login-in or Sign-up time.
@@ -1153,7 +1185,11 @@ bool _update_Signed_Up_Information(void)
 
         _red();
         gotoxy(32, 15);
-        printf("SIGNED-UP DATA NO FOUND, DO YOU WANT TO GO BACK THE THE PREVIOUS MENU, PRESS ANY KEY CONFORMATION.");
+        printf("SIGNED-UP DATA NO FOUND, TO GO BACK TO THE PREVIOUS MENU THEN PRESS ANY KEY...");
+        _reset();
+        getch();
+        
+        return false;
 
     }
 }
@@ -1178,39 +1214,62 @@ int _menu(void){
     char _user_Choice;
     int _serial_Number;
     int _return_Values;
+    int _highest_Serial_Number_Of_The_Menu = 1;
+    char *_Address_of_The_Allocated_Block_1 = NULL;
 
-    for(int _update_Y_Axis = 1 ; !feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis += 1){
+    fseek(_address_Of_The_Menu_Dot_Txt, 0, 2);
+    int _is_Empty = ftell(_address_Of_The_Menu_Dot_Txt);
 
-        fscanf(_address_Of_The_Menu_Dot_Txt, "%s", &_store_Option);
+    if(_is_Empty != 0)
+    {
+        fseek(_address_Of_The_Menu_Dot_Txt, 2, 0);
+        for(int _update_Y_Axis = 1 ; !feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis += 1)
+        {
 
-        gotoxy(32, 3 + _update_Y_Axis);
-        printf("%s", _store_Option);
+            fscanf(_address_Of_The_Menu_Dot_Txt, "%s", &_store_Option);
+
+            gotoxy(32, 3 + _update_Y_Axis);
+            printf("%s", _store_Option);
+
+        }
+
+        fclose(_address_Of_The_Menu_Dot_Txt);
+        
+        // Finding the highest serial Number.
+
+        int _find_Bracket_File;
+
+        for (_find_Bracket_File = 1; *(_store_Option + _find_Bracket_File) != ')'; _find_Bracket_File++);
+
+        _Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
+
+        for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
+        {
+
+            *(_Address_of_The_Allocated_Block_1 + _index) = *(_store_Option + _index);
+
+        }
+
+        // Assign null at the last of allocated memory.
+
+        *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
+
+        // Now convert the two fetched serial number from character to integer value.
+
+        _highest_Serial_Number_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
+        free(_Address_of_The_Allocated_Block_1);
 
     }
-    fclose(_address_Of_The_Menu_Dot_Txt);
-
-    int _find_Bracket_File;
-
-    for (_find_Bracket_File = 1; *(_store_Option + _find_Bracket_File) != ')'; _find_Bracket_File++);
-
-    char *_Address_of_The_Allocated_Block_1 = (char *) malloc(sizeof(char) * (_find_Bracket_File + 1));
-
-    for (int _index = 0; _index <= (_find_Bracket_File - 1); _index++)
+    else
     {
 
-        *(_Address_of_The_Allocated_Block_1 + _index) = *(_store_Option + _index);
+        gotoxy(32, 8);
+        _red();
+        printf("DIDN'T MENU FOUND, CLICK \'A\' TO ADD ANEW MENU OR OPTION");
+        _reset();
 
     }
-
-    // Assign null at the last of allocated memory.
-
-    *(_Address_of_The_Allocated_Block_1 + _find_Bracket_File) = '\0';
-
-    // Now convert the two (1st is from the File, 2'st is form the User-new-option) fetched serial number from character to integer value.
-
-    int _highest_Serial_Number_Of_The_Menu = atoi(_Address_of_The_Allocated_Block_1);
-    free(_Address_of_The_Allocated_Block_1);
-
+    
     gotoxy(32, 26);
     printf("PRESS \'D\' FOR DELETE OPTION WITH ALL THE RECORDS OF THE PARTICULAR OPTION, AND \'A\' FOR");
     gotoxy(32,27);
@@ -1370,12 +1429,7 @@ int _menu(void){
 
 
     }
-
-
-
-
-
-
+    
 }
 
 // Add more option
