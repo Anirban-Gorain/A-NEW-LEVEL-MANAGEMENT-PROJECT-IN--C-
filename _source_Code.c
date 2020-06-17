@@ -1831,6 +1831,11 @@ void _column_Maker(void){
     printf("ALL THE COLUMNS ADDED SUCCESSFULLY, PRESS ANY KEY YOU WILL REDIRECT TO THE MAIN MENU");
     getch();
 
+    fclose(_new_Menu);
+    fclose(_address_of_The_Path_Dot_Txt);
+
+    _printer(_store_Menu_And_Path_For_Operations);
+
 }
 
 // Memory allocater for store record.
