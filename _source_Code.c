@@ -40,9 +40,9 @@ int main(void)
 
     char _user_Choice;
 
-    if (_registration_Menu() == true)
+    //if (_registration_Menu() == true)
     _menu();
-    
+
     return 0;
 }
 
@@ -440,7 +440,7 @@ bool _sign_Up(void)
 
                 while (!feof(_path))
                 {
-                    
+
                     fscanf(_path, "%s", _store_Path);
 
                     for(_ignore_The_Serial_Part = 0; _store_Path[_ignore_The_Serial_Part] != ')'; _ignore_The_Serial_Part++);
@@ -452,7 +452,7 @@ bool _sign_Up(void)
                 fclose(_path);
                 remove("MENU/PATH/PATH.txt");
                 remove("MENU/MENU.txt");
-                
+
 
                 system("cls");
                 _border(28, 121);
@@ -804,18 +804,20 @@ bool _log_In(void)
 {
 
     FILE *_file_Pointer = fopen("PASSWORD/DATA.txt", "r");
+    fseek(_file_Pointer, 0, 2);
+    int _is_Empty = ftell(_file_Pointer);
 
     char _fetch_User_Name[20];
     char _fetch_Password[20];
     char _from_User_Username[20];
     char _from_User_Password[20];
 
-    if (_file_Pointer == NULL)
+    if (_file_Pointer == NULL || _is_Empty == 0)
     {
 
         _red();
         gotoxy(32, 8);
-        printf("NO SIGN-UP FOUND.");
+        printf("NO SIGNED-UP FOUND, FIRST YOU MUST SIGN-UP.");
 
         char _user_Choice;
 
@@ -839,6 +841,9 @@ bool _log_In(void)
     }
     else
     {
+
+        fclose(_file_Pointer);
+        _file_Pointer = fopen("PASSWORD/DATA.txt", "r");
 
         // First fetching User-name and Password from file.
 
@@ -902,6 +907,8 @@ bool _log_In(void)
             }
         }
     }
+
+    fclose(_file_Pointer);
 }
 
 // Update Sign-up information
@@ -1188,7 +1195,7 @@ bool _update_Signed_Up_Information(void)
         printf("SIGNED-UP DATA NO FOUND, TO GO BACK TO THE PREVIOUS MENU THEN PRESS ANY KEY...");
         _reset();
         getch();
-        
+
         return false;
 
     }
@@ -1214,7 +1221,7 @@ int _menu(void){
     char _user_Choice;
     int _serial_Number;
     int _return_Values;
-    int _highest_Serial_Number_Of_The_Menu = 1;
+    int _highest_Serial_Number_Of_The_Menu = 0;
     char *_Address_of_The_Allocated_Block_1 = NULL;
 
     fseek(_address_Of_The_Menu_Dot_Txt, 0, 2);
@@ -1234,7 +1241,7 @@ int _menu(void){
         }
 
         fclose(_address_Of_The_Menu_Dot_Txt);
-        
+
         // Finding the highest serial Number.
 
         int _find_Bracket_File;
@@ -1265,11 +1272,11 @@ int _menu(void){
 
         gotoxy(32, 8);
         _red();
-        printf("DIDN'T MENU FOUND, CLICK \'A\' TO ADD ANEW MENU OR OPTION");
+        printf("DIDN'T FOUND ANY MENU, CLICK \'A\' TO ADD ANEW MENU OR OPTION");
         _reset();
 
     }
-    
+
     gotoxy(32, 26);
     printf("PRESS \'D\' FOR DELETE OPTION WITH ALL THE RECORDS OF THE PARTICULAR OPTION, AND \'A\' FOR");
     gotoxy(32,27);
@@ -1298,31 +1305,8 @@ int _menu(void){
 
             // If user selected to delete option then control will come here.
 
-            _return_Values = _delete_Menu();
-            gotoxy(32, 26);
-            if(_return_Values != -1 && _return_Values != 0)
-                printf("DELETE SUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
-            else
-                printf("DELETE UNSUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
-
-            fflush(stdin);
-
-            scanf("%c", &_user_Choice);
-
-            if(_user_Choice == 'P' || _user_Choice == 'p')
-            {
-
-                _menu();
-
-            }
-            else
-            {
-
-                exit(1);
-
-            }
-
-
+            _delete_Menu();
+            
         }
         // 65 == A and 97 == a through of ASCII.
         else if(*_choice_Of_The_User == 65 || *_choice_Of_The_User == 97)
@@ -1430,7 +1414,7 @@ int _menu(void){
 
 
     }
-    
+
 }
 
 // Add more option
@@ -1478,7 +1462,7 @@ void _add_More_Option(int _highest_Serial_Number_Of_The_Menu){
     fprintf(_address_Of_The_Path_Dot_Txt, "\n%d)MENU/%s.txt", _highest_Serial_Number_Of_The_Menu, _which_Menu_Will_Creat_By_The_User);
 
     fclose(_address_Of_The_Path_Dot_Txt);
-    
+
 }
 
 // Delete menu function.
@@ -1510,9 +1494,10 @@ int _delete_Menu(void){
 
 
     int _update_Y_Axis = 1;
-    int _user_Selected_Result;
+    int _user_Selected_Result = 0;
     char _to_Store_Menu_Diffrent_Operation[101];
     char _to_Store_Path_Deletion_Time[101];
+    int _return_Value;
 
     for(; !feof(_address_Of_The_Menu_Dot_Txt); _update_Y_Axis++)
     {
@@ -1530,9 +1515,7 @@ int _delete_Menu(void){
     fflush(stdin);
     scanf("%d", &_user_Selected_Result);
 
-    // P == 80 and p == 112
-
-    if(_user_Selected_Result != 'P' || _user_Selected_Result != 'p'){
+    if((_user_Selected_Result != 'P' || _user_Selected_Result != 'p') && _user_Selected_Result != 0){
 
         // Finding how many menu have on the MENU.txt file.
 
@@ -1583,32 +1566,11 @@ int _delete_Menu(void){
 
                 // When the control will be come here, Which mean this path will not be write on the file, That mean help of this path I want to delete this file.
 
-                int _which_Item_Will_Be_Delete_In_Decreasing_Order;
-                int _assign_Assigner;
-                int _total_Length_Of_Each_Menu;
+                int _which_Item_Will_Be_Delete;
 
-                for (_which_Item_Will_Be_Delete_In_Decreasing_Order = 1; *(_to_Store_Path_Deletion_Time + _which_Item_Will_Be_Delete_In_Decreasing_Order) != ')'; _which_Item_Will_Be_Delete_In_Decreasing_Order++);
+                for (_which_Item_Will_Be_Delete = 1; *(_to_Store_Path_Deletion_Time + _which_Item_Will_Be_Delete) != ')'; _which_Item_Will_Be_Delete++);
 
-                for (; _which_Item_Will_Be_Delete_In_Decreasing_Order != -1; _which_Item_Will_Be_Delete_In_Decreasing_Order--)
-                {
-
-                    _assign_Assigner = _which_Item_Will_Be_Delete_In_Decreasing_Order;
-                    _total_Length_Of_Each_Menu = strlen(_to_Store_Path_Deletion_Time);
-                    _total_Length_Of_Each_Menu--;
-
-                    for(; _assign_Assigner <= (_total_Length_Of_Each_Menu - 1); _assign_Assigner++)
-                    {
-
-                        _to_Store_Path_Deletion_Time[_assign_Assigner] = _to_Store_Path_Deletion_Time[_assign_Assigner + 1];
-
-                    }
-
-                    _to_Store_Path_Deletion_Time[_assign_Assigner] = '\0';
-
-                }
-
-                // Deleting the file which contain this particular option data.
-                remove(_to_Store_Path_Deletion_Time);
+                _return_Value = remove(_to_Store_Path_Deletion_Time + _which_Item_Will_Be_Delete + 1);
 
             }
 
@@ -1625,6 +1587,41 @@ int _delete_Menu(void){
         rename("MENU/TEMPORARY_MENU.txt", "MENU/MENU.txt");
         rename("MENU/PATH/TEMPORARY_PATH.txt", "MENU/PATH/PATH.txt");
 
+        gotoxy(32, 20);
+
+        if(_return_Value == 0)
+        {
+
+            _green();
+            printf("DELETE SUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
+
+        }
+        else
+        {
+            
+            _red();
+            printf("DELETE UNSUCCESSFULL, PRESS P FOR GO TO THE PREVIOUS MENU, E FOR THR EXIT:");
+
+        }
+
+        _reset();
+        char _user_Choice;
+        fflush(stdin);
+        scanf("%c", &_user_Choice);
+
+        if(_user_Choice == 'P' || _user_Choice == 'p')
+        {
+
+            _menu();
+
+        }
+        else
+        {
+
+            exit(1);
+
+        }
+
         _serial_Number_Fixer();
 
         return 89;
@@ -1639,7 +1636,6 @@ int _delete_Menu(void){
         return 0;
 
     }
-
 
 }
 
@@ -1798,7 +1794,7 @@ void _column_Maker(void){
 
     // Allocating interger type memory to store the maximum size of character each of the column.
 
-    while(_how_Many_Column != 0)
+    while(_how_Many_Column >= 1)
     {
 
         // Taking the column name.
@@ -3197,17 +3193,17 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
 
     for (int _index = 0; _store_The_First_Line[_index] != '\0' ; _index++)
     {
-        
+
         if (_store_The_First_Line[_index] == ',')
         {
-           
+
             _how_Many_Column++;
 
         }
-        
+
 
     }
-    
+
 
     // Finding how many record.
 
@@ -3226,7 +3222,7 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
 
     while (!feof(_actual_File))
     {
-       
+
         fscanf(_actual_File, "%s", _swap_Container);
 
         if (_which_Line == _serial_Number_Of_Which_Record_User_Want_To_Update)
@@ -3250,7 +3246,7 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
 
             for (;_place_Of_The_Bracket_character != -1; _place_Of_The_Bracket_character--)
             {
-                
+
                 _index_For_Deletion = _place_Of_The_Bracket_character;
 
                 for(; _swap_Container[_index_For_Deletion + 1] != '\0'; _index_For_Deletion++)
@@ -3308,11 +3304,11 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
                     _reset();
 
                     fprintf(_temporary_File, "%s~", (_swap_Container + _index_Jumper_For_Record));
-        
+
                 }
                 else
                 {
-                    
+
                     printf("\n  CURRENTLY COLUMN %s CONTAIN %s THIS DATA, ENTER YOU UPDATED DATA [MAXIMUM NUMBER OF CHARACTER ALLOWED IS 15]:\n  ", (_store_The_First_Line + _index_Jumper_For_Column), (_swap_Container + _index_Jumper_For_Record));
                     fflush(stdin);
                     gets(_store_record_To_Print);
@@ -3320,7 +3316,7 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
                     fprintf(_temporary_File, "%s~", _store_record_To_Print);
 
                 }
-                
+
                 _index_Jumper_For_Column += (strlen(_store_The_First_Line  + _index_Jumper_For_Column) + 1);
                 _index_Jumper_For_Record += (strlen(_swap_Container  + _index_Jumper_For_Record) + 1);
                 _how_Many_Column--;
@@ -3328,7 +3324,7 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
                 printf("\n\n");
 
             }
-            
+
 
             _which_Line++;
 
@@ -3338,7 +3334,7 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
             continue;
 
         }
-        
+
         fprintf(_temporary_File, "%s", _swap_Container);
 
         _which_Line++;
@@ -3371,5 +3367,5 @@ int _update(char * _path_Of_The_Selected_Option, int _serial_Number_Of_Which_Rec
 
     _reset();
     _printer(_path_Of_The_Selected_Option);
-    
+
 }
