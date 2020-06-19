@@ -699,6 +699,8 @@ bool _sign_Up(void)
                 printf("SIGN-UP DONE, YOU WILL REDIRECT TO THE MENU, PRESS ANY KEY TO CONTINUE.");
                 getch();
 
+                _menu();
+
                 return true;
             }
 
@@ -1720,7 +1722,7 @@ void _column_Maker(void){
     while(!feof(_address_of_The_Path_Dot_Txt))
         fscanf(_address_of_The_Path_Dot_Txt, "%s", _store_Menu_And_Path_For_Operations);
 
-    // Deletion the serial of the path.
+    // Deletion the serial number from the path.
 
     for (_which_Item_Will_Be_Delete_In_Decreasing_Order = 1; *(_store_Menu_And_Path_For_Operations + _which_Item_Will_Be_Delete_In_Decreasing_Order) != ')'; _which_Item_Will_Be_Delete_In_Decreasing_Order++);
 
@@ -1993,12 +1995,9 @@ void _memory_Allocater(char *_path_Of_The_Selected_Option){
 
     char *_here_Will_Store_All_The_Record_Temporary = (char*) malloc(sizeof(char) * _store_The_Highest_Number);
 
-    _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _path_Of_The_Selected_Option, _recomendate_Serial_Number);
-
     fclose(_address_Of_The_User_Required_File);
-    free(_limition_Of_Each_Column);
-    free(_store_Each_Column_Name);
-    free(_here_Will_Store_All_The_Record_Temporary);
+
+    _record_Inserter(_how_Many_Column, _limition_Of_Each_Column, _store_Each_Column_Name, _here_Will_Store_All_The_Record_Temporary, _path_Of_The_Selected_Option, _recomendate_Serial_Number);
 }
 
 // Record insert function.
@@ -2030,6 +2029,9 @@ void _record_Inserter(int _how_Many_Column, int *_limition_Of_Each_Column, char 
     }
 
     fclose(_address_Of_Where_Will_Store_Data);
+    free(_limition_Of_Each_Column);
+    free(_store_Each_Column_Name);
+    free(_here_Will_Store_All_The_Record_Temporary);
 
 }
 
@@ -2389,44 +2391,40 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         _red();
         gotoxy(32, 8);
-        printf("DON'T FOUND ANY RECORD, HIT ANY KEY FOR GO TO THE MENU.");
-
+        printf("DON'T FOUND ANY COLUMNS AND RECORD.");
+        gotoxy(32, 9);
+        printf("TO ADD NEW COLUMN PRESS \'C\', TO EXIT PRESS \'E\'.");
         _reset();
 
-        // Commands.
+        char _User_Choice;
 
-        gotoxy(32, 11);
-        printf("1)A FOR ADD A RECORD.");
-
-        gotoxy(32, 13);
-        printf("2)D FOR DELETE A RECORD.");
-
-        gotoxy(32, 15);
-        printf("3)C FOR ADD MORE COLUMN.");
-
-        gotoxy(32, 17);
-        printf("4)R FOR REMOVE A COLUMN.");
-
-        gotoxy(32, 19);
-        printf("5)S FOR SEARCH.");
-
-        gotoxy(32, 21);
-        printf("6)U FOR UPDATE.");
-
-        gotoxy(32, 23);
-        printf("7)B FOR BACK.");
-
-        gotoxy(32, 25);
-        printf("8)M FOR THE MAIN MENU.");
-
-        _reset();
-
-        char _user_Choice;
-
-        gotoxy(32, 28);
+        gotoxy(32, 10);
         printf("ENTER YOUR CHOICE:");
         fflush(stdin);
         scanf("%c", &_user_Choice);
+        
+        if (_user_Choice == 'e' || _user_Choice == 'E')
+        {
+            
+            exit(1);
+
+        }
+        else
+        {
+            
+            int _How_Many_Column_User_Want_To_Enter;
+
+            gotoxy(32, 12);
+            printf("ENTER HOW MANY COLUMN YOU WANT ADD:");
+            scanf("%d", &_How_Many_Column_User_Want_To_Enter);
+
+
+            fclose(_which_option_Have_To_Print);
+            _add_New_Column(_path_Of_The_Selected_Option, _How_Many_Column_User_Want_To_Enter);
+
+            _user_Choice = 'z';
+
+        }
 
     }
 
@@ -2778,6 +2776,7 @@ int _add_New_Column(char *_path_Of_The_Selected_Option, int _How_Many_Column_Use
 
     }
 
+    if(_how_Many_Record != 1)
     fprintf(_temporary_File, "\n");
 
     // Printing already stored data.
