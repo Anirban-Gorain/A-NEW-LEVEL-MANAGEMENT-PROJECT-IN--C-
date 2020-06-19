@@ -40,7 +40,7 @@ int main(void)
 
     char _user_Choice;
 
-    //if (_registration_Menu() == true)
+    if (_registration_Menu() == true)
     _menu();
 
     return 0;
@@ -2042,7 +2042,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
     system("cls");
 
-    FILE *_delete_Item_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
+    FILE *_which_option_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
 
     char _store_File_To_Print[122] = {[0 ... 121] = '\0'};
     char _a_Copy_Of_First_Line[200];
@@ -2050,13 +2050,13 @@ char _printer(char *_path_Of_The_Selected_Option)
 
     // Checking file empty or not.
 
-    fseek(_delete_Item_Have_To_Print, 0, 2);
-    int _is_Empty = ftell(_delete_Item_Have_To_Print);
+    fseek(_which_option_Have_To_Print, 0, 2);
+    int _is_Empty = ftell(_which_option_Have_To_Print);
 
     // Reopen the same file.
 
-    fclose(_delete_Item_Have_To_Print);
-    _delete_Item_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
+    fclose(_which_option_Have_To_Print);
+    _which_option_Have_To_Print = fopen(_path_Of_The_Selected_Option, "r");
 
     if(_is_Empty != 0)
     {
@@ -2083,7 +2083,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         // Taking the first line which line contain all the information like  How many COLUMN, Maximum size of the each column also name of the each column, Of a particualar option.
 
-        fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+        fscanf(_which_option_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
         // Finding the how many column existing.
 
@@ -2175,14 +2175,14 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         // The down-ward exta 2 line of code because of want to open the record from the second line.
 
-        fseek(_delete_Item_Have_To_Print, 2, 0);
-        fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+        fseek(_which_option_Have_To_Print, 2, 0);
+        fscanf(_which_option_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
         int _second_line_Length = strlen(_store_The_Fetched_Line_From_User_Reqired_File);
 
-        while(!feof(_delete_Item_Have_To_Print))
+        while(!feof(_which_option_Have_To_Print))
         {
-            fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+            fscanf(_which_option_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
             _second_line_Length = strlen(_store_The_Fetched_Line_From_User_Reqired_File);
 
@@ -2272,18 +2272,18 @@ char _printer(char *_path_Of_The_Selected_Option)
         for(int _index = 0; _index < (_how_Many_Column); _index++)
         {
 
-            fseek(_delete_Item_Have_To_Print, 2, 0);
-            fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+            fseek(_which_option_Have_To_Print, 2, 0);
+            fscanf(_which_option_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
 
             _update_X_Axis += *(_address_Of_The_Allocated_Memory + _index) + 1;
             _update_Y_Axis = 9;
 
-            while(!feof(_delete_Item_Have_To_Print))
+            while(!feof(_which_option_Have_To_Print))
             {
 
                 _yellow();
 
-                fscanf(_delete_Item_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
+                fscanf(_which_option_Have_To_Print, "%s", _store_The_Fetched_Line_From_User_Reqired_File);
                 gotoxy(_update_X_Axis - 1, _update_Y_Axis);
                 printf("|");
                 _update_Y_Axis++;
@@ -2372,7 +2372,7 @@ char _printer(char *_path_Of_The_Selected_Option)
         fflush(stdin);
         scanf("%c", &_user_Choice);
 
-        fclose(_delete_Item_Have_To_Print);
+        fclose(_which_option_Have_To_Print);
         free(_address_Of_The_Allocated_Memory);
 
     }
@@ -2435,7 +2435,7 @@ char _printer(char *_path_Of_The_Selected_Option)
 
         /*
 
-            In the _memory_Allocater function sending the path which option user will open. Then the memory allocater will fetch all the the first a line
+            In the _memory_Allocater function sending the path which option user will open. Then the memory allocater will fetch all of the first line
             (METADATA OF COLUMNS) and after process memory allocater will produce COLUMN-NAME, COLUMN-LIMITION and store all
             these data then this function will call _recoed_Inserter function where will send all the data which produce by this
             function and the one by one _recoed_Inserter will show all the COLUMN-NAME, COLUMN-LIMITION and will take data from
